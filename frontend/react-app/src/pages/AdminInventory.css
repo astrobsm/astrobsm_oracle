@@ -1,0 +1,37 @@
+.admin-inventory-list {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.admin-inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07);
+  overflow: hidden;
+}
+
+.admin-inventory-table th, .admin-inventory-table td {
+  padding: 0.75rem 1.2rem;
+  text-align: left;
+}
+
+.admin-inventory-table th {
+  background: #34495e;
+  color: #fff;
+  font-weight: 600;
+}
+
+.admin-inventory-table tr:nth-child(even) {
+  background: #f5f7fa;
+}
+
+.admin-inventory-table tr:hover {
+  background: #e0f7fa;
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: 500;
+}

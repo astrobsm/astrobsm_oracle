@@ -1,0 +1,57 @@
+.admin-approvals-container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 32px;
+}
+.admin-approvals-container h2 {
+  margin-bottom: 24px;
+  color: #2c3e50;
+}
+.approvals-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+.approvals-table th, .approvals-table td {
+  border: 1px solid #e0e0e0;
+  padding: 12px 8px;
+  text-align: left;
+}
+.approvals-table th {
+  background: #f5f6fa;
+  color: #34495e;
+}
+.approvals-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+button {
+  background: #27ae60;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #219150;
+}
+.error {
+  background: #fdecea;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+.success {
+  background: #eafaf1;
+  color: #27ae60;
+  border: 1px solid #27ae60;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}

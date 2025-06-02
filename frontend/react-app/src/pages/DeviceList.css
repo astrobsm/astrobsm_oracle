@@ -1,0 +1,29 @@
+.device-list-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f0f8ff;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+.device-list-container h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.awesome-button {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    color: white;
+    background: linear-gradient(145deg, #1e90ff, #4682b4);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3), -4px -4px 10px rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.awesome-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.4), -6px -6px 15px rgba(255, 255, 255, 0.4);
+}

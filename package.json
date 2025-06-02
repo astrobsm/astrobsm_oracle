@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "qrcode.react": "^4.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-scripts": "^3.4.4"
+  },
+  "devDependencies": {
+    "@types/jspdf": "^1.3.3",
+    "react-refresh-webpack-plugin": "^0.1.0",
+    "source-map-loader": "^5.0.0"
+  }
+}

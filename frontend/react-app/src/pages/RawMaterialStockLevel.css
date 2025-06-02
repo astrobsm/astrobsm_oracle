@@ -1,0 +1,53 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    color: #333;
+}
+
+.raw-material-stock-level-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.raw-material-stock-level-container h1 {
+    text-align: center;
+    color: #1f2937;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.raw-material-stock-level-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.raw-material-stock-level-table th, .raw-material-stock-level-table td {
+    border: 1px solid #d1d5db;
+    padding: 10px;
+    text-align: center;
+}
+
+.raw-material-stock-level-table th {
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.raw-material-stock-level-table tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.raw-material-stock-level-table tr:hover {
+    background: #e5e7eb;
+}
+
+.raw-material-stock-level-table td {
+    color: #374151;
+}

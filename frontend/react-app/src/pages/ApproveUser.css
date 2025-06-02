@@ -1,0 +1,32 @@
+.approve-user-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.approve-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.approve-button:hover {
+  background-color: #45a049;
+}

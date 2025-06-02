@@ -1,0 +1,67 @@
+.staff-appraisal-container {
+    padding: 20px;
+    background: #f9f9f9;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.staff-appraisal-container h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.staff-appraisal-form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.staff-appraisal-form label {
+    display: block;
+    margin-bottom: 15px;
+    color: #555;
+    font-weight: bold;
+}
+
+.staff-appraisal-form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), inset -2px -2px 5px rgba(255, 255, 255, 0.7);
+}
+
+.fetch-button,
+.export-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(145deg, #32cd32, #228b22);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2), -2px -2px 5px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-top: 10px;
+}
+
+.fetch-button:hover,
+.export-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3), -4px -4px 10px rgba(255, 255, 255, 0.3);
+}
+
+.appraisal-details {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+}

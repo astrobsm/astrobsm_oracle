@@ -1,0 +1,71 @@
+.salary-console-container {
+    padding: 20px;
+    background: #f9f9f9;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.salary-console-container h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.salary-console-form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.salary-console-form label {
+    display: block;
+    margin-bottom: 15px;
+    color: #555;
+    font-weight: bold;
+}
+
+.salary-console-form input,
+.salary-console-form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), inset -2px -2px 5px rgba(255, 255, 255, 0.7);
+}
+
+.fetch-button,
+.calculate-button,
+.generate-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(145deg, #32cd32, #228b22);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2), -2px -2px 5px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-top: 10px;
+}
+
+.fetch-button:hover,
+.calculate-button:hover,
+.generate-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3), -4px -4px 10px rgba(255, 255, 255, 0.3);
+}
+
+.salary-console-form p {
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #333;
+}

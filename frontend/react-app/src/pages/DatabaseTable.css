@@ -1,0 +1,46 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.database-table-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid navy;
+}
+
+.database-table-container h1 {
+    text-align: center;
+    color: navy;
+}
+
+.database-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.database-table th, .database-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.database-table th {
+    background-color: navy;
+    color: white;
+}
+
+.database-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.database-table tr:hover {
+    background-color: #f1f1f1;
+}

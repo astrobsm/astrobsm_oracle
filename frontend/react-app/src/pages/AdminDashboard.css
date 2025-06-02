@@ -1,0 +1,78 @@
+.admin-dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.admin-dashboard-header {
+  background: #2d3e50;
+  color: #fff;
+  padding: 2rem 1rem 1rem 1rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.1);
+}
+
+.admin-dashboard-header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+}
+
+.admin-dashboard-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-dashboard-nav li {
+  transition: transform 0.2s;
+}
+
+.admin-dashboard-nav li:hover {
+  transform: scale(1.08);
+}
+
+.admin-dashboard-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.admin-dashboard-nav a:hover {
+  background: #1abc9c;
+  color: #fff;
+}
+
+.admin-dashboard-main {
+  padding: 3rem 1rem 1rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.admin-dashboard-welcome {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+  padding: 2.5rem 3rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.admin-dashboard-welcome h2 {
+  margin-bottom: 1rem;
+  color: #2d3e50;
+  font-size: 2rem;
+}
+
+.admin-dashboard-welcome p {
+  color: #555;
+  font-size: 1.1rem;
+}

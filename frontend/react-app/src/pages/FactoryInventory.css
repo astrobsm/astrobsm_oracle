@@ -1,0 +1,84 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.factory-inventory-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid navy;
+}
+
+.factory-inventory-container h1 {
+    text-align: center;
+    color: navy;
+}
+
+.factory-inventory-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.factory-inventory-form input,
+.factory-inventory-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.factory-inventory-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: navy;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.factory-inventory-form button:hover {
+    background-color: skyblue;
+}
+
+.message {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.inventory-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.awesome-button {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    color: white;
+    background: linear-gradient(145deg, #1e90ff, #4682b4);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3), -4px -4px 10px rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    text-align: center;
+}
+
+.awesome-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.4), -6px -6px 15px rgba(255, 255, 255, 0.4);
+}

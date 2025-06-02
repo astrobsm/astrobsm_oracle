@@ -1,0 +1,26 @@
+.staff-performance-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.staff-performance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.staff-performance-table th, .staff-performance-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.staff-performance-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}

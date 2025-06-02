@@ -1,0 +1,110 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    color: #333;
+}
+
+.sales-summary-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sales-summary-container h1 {
+    text-align: center;
+    color: #1f2937;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.summary-form label {
+    display: block;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.summary-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.summary-form button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: navy;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.summary-form button:hover {
+    background-color: skyblue;
+}
+
+.sales-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.sales-summary-table th, .sales-summary-table td {
+    border: 1px solid #d1d5db;
+    padding: 10px;
+    text-align: center;
+}
+
+.sales-summary-table th {
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.sales-summary-table tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.sales-summary-table tr:hover {
+    background: #e5e7eb;
+}
+
+.sales-summary-table td {
+    color: #374151;
+}
+
+.sales-summary-table button {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sales-summary-table button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sales-summary-table .paid {
+    color: #10b981;
+    font-weight: bold;
+}
+
+.sales-summary-table .unpaid {
+    color: #ef4444;
+    font-weight: bold;
+}

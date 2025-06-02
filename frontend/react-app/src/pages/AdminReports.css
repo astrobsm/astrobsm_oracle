@@ -1,0 +1,37 @@
+.admin-reports-list {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.admin-reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07);
+  overflow: hidden;
+}
+
+.admin-reports-table th, .admin-reports-table td {
+  padding: 0.75rem 1.2rem;
+  text-align: left;
+}
+
+.admin-reports-table th {
+  background: #8e44ad;
+  color: #fff;
+  font-weight: 600;
+}
+
+.admin-reports-table tr:nth-child(even) {
+  background: #f5f7fa;
+}
+
+.admin-reports-table tr:hover {
+  background: #e0f7fa;
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: 500;
+}
