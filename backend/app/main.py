@@ -95,9 +95,9 @@ class LoginRequest(BaseModel):
 # Remove authentication dependencies from the application
 # Allow unrestricted access to all routes
 
-@app.get("/")
-async def root():
-    return {"message": "Welcome to AstroBSM-Oracle IVANSTAMAS API"}
+# @app.get("/")
+# async def root():
+#     return {"message": "Welcome to AstroBSM-Oracle IVANSTAMAS API"}
 
 @app.get("/api/v1/customers/")
 async def test_customers():
