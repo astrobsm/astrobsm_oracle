@@ -124,6 +124,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"detail": exc.errors()}, headers=headers)
 
 # Serve React build static files
-frontend_build_path = os.path.join(os.path.dirname(__file__), '../../frontend/react-app/build')
-if os.path.exists(frontend_build_path):
-    app.mount("/", StaticFiles(directory=frontend_build_path, html=True), name="static")
+static_path = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(static_path):
+    app.mount("/", StaticFiles(directory=static_path, html=True), name="static")
