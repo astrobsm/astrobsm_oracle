@@ -3,7 +3,7 @@ services:
     name: astrobsm-oracle-backend
     runtime: python
     rootDir: backend
-    buildCommand: pip install -r requirements.txt && cd ../frontend/react-app && npm install --legacy-peer-deps && chmod +x ./node_modules/.bin/react-scripts && npm run build && cp -r build ../../backend/app/static && alembic -c ../backend/alembic.ini upgrade head
+    buildCommand: pip install -r requirements.txt && cd ../frontend/react-app && npm install --legacy-peer-deps && chmod +x ./node_modules/.bin/react-scripts && npm run build && cp -r build ../../backend/app/static && alembic -c alembic.ini upgrade head
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
     envVars:
       - key: DATABASE_URL
