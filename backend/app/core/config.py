@@ -25,3 +25,4 @@ class Settings(BaseSettings):
         extra = "forbid"  # Enforce known fields to prevent typos
 
 settings = Settings()
+print(f"[DEBUG] DATABASE_URL in use: {settings.DATABASE_URL}")
