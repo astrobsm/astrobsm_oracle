@@ -9,7 +9,7 @@ from app.db.session import SessionLocal
 from pydantic import BaseModel
 from app.api.v1.production_analysis import router as production_analysis_router
 from app.api.v1.endpoints import auth
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.requests import Request
 from fastapi.exception_handlers import RequestValidationError
 from fastapi.exceptions import HTTPException
@@ -127,3 +127,16 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 static_path = os.path.join(os.path.dirname(__file__), "static")
 if os.path.exists(static_path):
     app.mount("/", StaticFiles(directory=static_path, html=True), name="static")
+
+# Serve index.html for all non-API, non-static routes (for React Router)
+from starlette.requests import Request as StarletteRequest
+from starlette.responses import Response as StarletteResponse
+
+@app.exception_handler(404)
+async def custom_404_handler(request: StarletteRequest, exc):
+    # Only serve index.html for non-API, non-static routes
+    if not request.url.path.startswith("/api") and not request.url.path.startswith("/static"):
+        index_path = os.path.join(os.path.dirname(__file__), "static", "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+    return StarletteResponse("Not Found", status_code=404)
