@@ -27,6 +27,13 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 target_metadata = Base.metadata
 
+from app.core.config import settings
+
+# Patch Alembic config to ensure correct DB URL (handles env and prefix fix)
+db_url = settings.DATABASE_URL
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
+
 def run_migrations_offline():
     """Run migrations in 'offline' mode."""
     url = config.get_main_option("sqlalchemy.url")
