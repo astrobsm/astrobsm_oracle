@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-        extra = "forbid"  # Enforce known fields to prevent typos
+        extra = "allow"  # Allow extra env vars (e.g., SKIP_PREFLIGHT_CHECK) for Render compatibility
 
 settings = Settings()
 print(f"[DEBUG] DATABASE_URL in use: {settings.DATABASE_URL}")
