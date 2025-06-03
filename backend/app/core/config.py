@@ -1,6 +1,7 @@
 from typing import List
 from pydantic_settings import BaseSettings
 from pydantic import Field
+import os
 
 class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql://postgres:natiss_natiss@localhost/astrobsm_oracle"
@@ -25,4 +26,7 @@ class Settings(BaseSettings):
         extra = "allow"  # Allow extra env vars (e.g., SKIP_PREFLIGHT_CHECK) for Render compatibility
 
 settings = Settings()
+# Patch: Convert postgres:// to postgresql:// for SQLAlchemy compatibility
+if settings.DATABASE_URL.startswith("postgres://"):
+    settings.DATABASE_URL = settings.DATABASE_URL.replace("postgres://", "postgresql://", 1)
 print(f"[DEBUG] DATABASE_URL in use: {settings.DATABASE_URL}")
