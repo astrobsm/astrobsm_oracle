@@ -4,7 +4,7 @@ from pydantic import Field
 import os
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql://postgres:natiss_natiss@localhost/astrobsm_oracle"
+    DATABASE_URL: str = "postgresql://astrobsm:WttcHRFGuDdzcwFn5YtdcNodlshXJ3sT@dpg-d10a2i8gjchc73agp9a0-a.oregon-postgres.render.com/bonnesantemedical_db"
     SECRET_KEY: str = "your_secret_key"  # Change this to a strong secret key
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
