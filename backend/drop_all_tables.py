@@ -5,10 +5,9 @@ This script drops all tables in the connected PostgreSQL database. Use with caut
 from sqlalchemy import create_engine, MetaData, text
 from sqlalchemy.engine import reflection
 from sqlalchemy.exc import ProgrammingError
-from app.core.config import settings
 
-# Adjust this import if your config is elsewhere
-DATABASE_URL = settings.DATABASE_URL
+# Set your Render production DB URL directly here for this operation
+DATABASE_URL = "postgresql://astrobsm:WttcHRFGuDdzcwFn5YtdcNodlshXJ3sT@dpg-d10a2i8gjchc73agp9a0-a.oregon-postgres.render.com/bonnesantemedical_db"
 
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
@@ -25,4 +24,10 @@ with engine.connect() as conn:
         except ProgrammingError as e:
             print(f"Error dropping table {table}: {e}")
     trans.commit()
+    # Also drop alembic_version if it exists
+    try:
+        conn.execute(text('DROP TABLE IF EXISTS alembic_version CASCADE;'))
+        print("Dropped alembic_version table.")
+    except Exception as e:
+        print(f"Error dropping alembic_version: {e}")
 print("All tables dropped.")
