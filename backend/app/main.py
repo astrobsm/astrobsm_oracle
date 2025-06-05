@@ -113,18 +113,15 @@ async def global_exception_handler(request: Request, exc: Exception):
         "detail": str(exc),
         "trace": traceback.format_exc()
     }
-    headers = {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*", "Access-Control-Allow-Methods": "*"}
-    return JSONResponse(status_code=500, content=content, headers=headers)
+    return JSONResponse(status_code=500, content=content)
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    headers = {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*", "Access-Control-Allow-Methods": "*"}
-    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail}, headers=headers)
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    headers = {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*", "Access-Control-Allow-Methods": "*"}
-    return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"detail": exc.errors()}, headers=headers)
+    return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"detail": exc.errors()})
 
 # Serve React build static files
 static_path = os.path.join(os.path.dirname(__file__), "static")
