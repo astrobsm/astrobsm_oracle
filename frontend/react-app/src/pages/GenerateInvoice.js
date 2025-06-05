@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import './GenerateInvoice.css';
+import API_BASE_URL from '../config';
 
 const GenerateInvoice = () => {
     const [customers, setCustomers] = useState([]);
@@ -21,7 +22,7 @@ const GenerateInvoice = () => {
     useEffect(() => {
         const fetchCustomers = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/customers');
+                const response = await fetch(`${API_BASE_URL}/customers`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -34,7 +35,7 @@ const GenerateInvoice = () => {
 
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/products');
+                const response = await fetch(`${API_BASE_URL}/products`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -135,7 +136,7 @@ const GenerateInvoice = () => {
             date: now.toISOString().split('T')[0] // Add date in YYYY-MM-DD format
         };
         try {
-            const response = await fetch('http://localhost:8000/api/v1/invoices', {
+            const response = await fetch(`${API_BASE_URL}/invoices`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(invoicePayload)

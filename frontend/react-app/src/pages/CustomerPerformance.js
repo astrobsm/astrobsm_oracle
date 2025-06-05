@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './CustomerPerformance.css';
+import API_BASE_URL from '../config';
 
 const CustomerPerformance = () => {
     const [customers, setCustomers] = useState([]);
@@ -7,7 +8,7 @@ const CustomerPerformance = () => {
     useEffect(() => {
         const fetchCustomerPerformance = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/customer-performance');
+                const response = await fetch(`${API_BASE_URL}/customer-performance`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DeviceMaintenanceLog.css';
+import API_BASE_URL from '../config';
 
 const DeviceMaintenanceLog = () => {
     const [devices, setDevices] = useState([]);
@@ -14,7 +15,7 @@ const DeviceMaintenanceLog = () => {
     useEffect(() => {
         const fetchDevices = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/devices');
+                const response = await fetch(`${API_BASE_URL}/devices`);
                 const data = await response.json();
                 setDevices(Array.isArray(data) ? data : []);
             } catch (error) {
@@ -33,7 +34,7 @@ const DeviceMaintenanceLog = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8000/api/v1/maintenance-logs', {
+            const response = await fetch(`${API_BASE_URL}/maintenance-logs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

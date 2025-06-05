@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './FactoryInventory.css';
+import API_BASE_URL from '../config';
 
 const FactoryInventory = () => {
     const [factoryData, setFactoryData] = useState({
@@ -17,7 +18,7 @@ const FactoryInventory = () => {
     useEffect(() => {
         const fetchSuppliers = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/suppliers');
+                const response = await fetch(`${API_BASE_URL}/suppliers`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setSuppliers(data);
@@ -42,7 +43,7 @@ const FactoryInventory = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8000/api/v1/factory-inventory', {
+            const response = await fetch(`${API_BASE_URL}/factory-inventory`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

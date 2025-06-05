@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DeviceListPage.css';
+import API_BASE_URL from '../config';
 
 const DeviceListPage = () => {
     const [devices, setDevices] = useState([]);
@@ -7,7 +8,7 @@ const DeviceListPage = () => {
     useEffect(() => {
         const fetchDevices = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/devices');
+                const response = await fetch(`${API_BASE_URL}/devices`);
                 const data = await response.json();
                 setDevices(data);
             } catch (error) {

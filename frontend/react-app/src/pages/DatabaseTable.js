@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './DatabaseTable.css';
+import API_BASE_URL from '../config';
 
 const DatabaseTable = () => {
     const [data, setData] = useState([]);
@@ -7,7 +8,7 @@ const DatabaseTable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/database-table');
+                const response = await fetch(`${API_BASE_URL}/database-table`);
                 const result = await response.json();
                 setData(result);
             } catch (error) {

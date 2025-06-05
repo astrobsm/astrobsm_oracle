@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './AdminUserApprovals.css';
+import API_BASE_URL from '../config';
 
 const AdminUserApprovals = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
@@ -11,7 +12,7 @@ const AdminUserApprovals = () => {
   useEffect(() => {
     const fetchPendingUsers = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/auth/pending-users');
+        const response = await fetch(`${API_BASE_URL}/auth/pending-users`);
         if (!response.ok) throw new Error('Failed to fetch pending users');
         const data = await response.json();
         setPendingUsers(data);
@@ -39,7 +40,7 @@ const AdminUserApprovals = () => {
     setError('');
     setSuccess('');
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/auth/approve-user/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/auth/approve-user/${userId}`, {
         method: 'POST',
       });
       if (!response.ok) throw new Error('Failed to approve user');

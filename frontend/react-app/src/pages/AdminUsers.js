@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminSection from '../components/AdminSection';
 import './AdminUsers.css';
+import API_BASE_URL from '../config';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -10,7 +11,7 @@ const AdminUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/staff');
+        const response = await fetch(`${API_BASE_URL}/staff`);
         if (!response.ok) throw new Error('Failed to fetch users');
         const data = await response.json();
         setUsers(data);

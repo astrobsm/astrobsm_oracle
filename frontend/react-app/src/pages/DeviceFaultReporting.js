@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DeviceFaultReporting.css';
+import API_BASE_URL from '../config';
 
 const DeviceFaultReporting = () => {
     const [devices, setDevices] = useState([]);
@@ -13,7 +14,7 @@ const DeviceFaultReporting = () => {
     useEffect(() => {
         const fetchDevices = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/devices');
+                const response = await fetch(`${API_BASE_URL}/devices`);
                 const data = await response.json();
                 setDevices(Array.isArray(data) ? data : []);
             } catch (error) {
@@ -32,7 +33,7 @@ const DeviceFaultReporting = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8000/api/v1/fault-reports', {
+            const response = await fetch(`${API_BASE_URL}/fault-reports`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

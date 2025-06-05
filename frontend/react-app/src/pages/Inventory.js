@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Inventory.css';
+import API_BASE_URL from '../config';
 
 const Inventory = () => {
     const [products, setProducts] = useState([]);
@@ -8,7 +9,7 @@ const Inventory = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/products');
+                const response = await fetch(`${API_BASE_URL}/products`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setProducts(data);
@@ -24,7 +25,7 @@ const Inventory = () => {
 
         const fetchRawMaterials = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/inventory/raw-materials');
+                const response = await fetch(`${API_BASE_URL}/inventory/raw-materials`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setRawMaterials(data);

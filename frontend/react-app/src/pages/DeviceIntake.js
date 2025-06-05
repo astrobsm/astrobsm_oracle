@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DeviceIntake.css';
+import API_BASE_URL from '../config';
 
 const DeviceIntake = () => {
     const [deviceData, setDeviceData] = useState({
@@ -19,7 +20,7 @@ const DeviceIntake = () => {
     useEffect(() => {
         const fetchStaff = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/staff');
+                const response = await fetch(`${API_BASE_URL}/staff`);
                 const data = await response.json();
                 console.log('Fetched staff:', data); // Debugging log
                 setStaffList(Array.isArray(data) ? data : []); // Ensure staffList is always an array
@@ -31,7 +32,7 @@ const DeviceIntake = () => {
 
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/products');
+                const response = await fetch(`${API_BASE_URL}/products`);
                 const data = await response.json();
                 console.log('Fetched products:', data); // Debugging log
                 setProducts(Array.isArray(data) ? data : []); // Ensure products is always an array
@@ -53,7 +54,7 @@ const DeviceIntake = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8000/api/v1/device-intake', {
+            const response = await fetch(`${API_BASE_URL}/device-intake`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

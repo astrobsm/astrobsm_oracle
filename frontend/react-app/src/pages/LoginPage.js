@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import './LoginPage.custom.css';
+import API_BASE_URL from '../config';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -52,7 +53,7 @@ const LoginPage = () => {
     if (isFirstTimeUser && !hasCredentials) {
       try {
         // Send profile creation request
-        const resp = await fetch('http://localhost:8000/api/v1/auth/create-profile', {
+        const resp = await fetch(`${API_BASE_URL}/auth/create-profile`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -71,7 +72,7 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, role: roleMap[role] || role }),
