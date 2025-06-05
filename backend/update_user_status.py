@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy import create_engine
 from app.db.models.user import User
 
-DATABASE_URL = "postgresql://astrobsm_dboracle_user:WttcHRFGuDdzcwFn5YtdcNodlshXJ3sT@dpg-cp1v1g1gkuv2qv7v7v80-a.oregon-postgres.render.com/astrobsm_dboracle"
+DATABASE_URL = "postgresql://astrobsm:WttcHRFGuDdzcwFn5YtdcNodlshXJ3sT@dpg-d10a2i8gjchc73agp9a0-a.oregon-postgres.render.com/bonnesantemedical_db"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -7,7 +7,7 @@ from sqlalchemy.engine import reflection
 from sqlalchemy.exc import ProgrammingError
 
 # Set your Render production DB URL directly here for this operation
-DATABASE_URL = "postgresql://astrobsm_dboracle_user:WttcHRFGuDdzcwFn5YtdcNodlshXJ3sT@dpg-cp1v1g1gkuv2qv7v7v80-a.oregon-postgres.render.com/astrobsm_dboracle"
+DATABASE_URL = "postgresql://astrobsm:WttcHRFGuDdzcwFn5YtdcNodlshXJ3sT@dpg-d10a2i8gjchc73agp9a0-a.oregon-postgres.render.com/bonnesantemedical_db"
 
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
