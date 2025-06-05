@@ -111,3 +111,18 @@ def create_admin_user_api(db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     return {"message": f"Admin user '{username}' created with password '{password}'."}
+
+@router.get("/list-users")
+def list_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    return [
+        {
+            "id": u.id,
+            "username": u.username,
+            "role": u.role,
+            "status": u.status,
+            "email": getattr(u, "email", None),
+            "full_name": getattr(u, "full_name", None)
+        }
+        for u in users
+    ]
