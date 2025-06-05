@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -41,7 +42,7 @@ const Login = () => {
         if (isFirstTimeUser) {
             try {
                 // Send profile creation request
-                await axios.post('http://localhost:8000/api/v1/auth/create-profile', {
+                await axios.post(`${API_BASE_URL}/auth/create-profile`, {
                     full_name: profileData.fullName,
                     email: profileData.email,
                     phone: profileData.phone,
@@ -55,7 +56,7 @@ const Login = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8000/api/v1/auth/login', {
+            const response = await axios.post(`${API_BASE_URL}/auth/login`, {
                 username,
                 password,
                 role
