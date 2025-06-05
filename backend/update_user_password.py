@@ -1,27 +1,32 @@
-from sqlalchemy.orm import Session, sessionmaker
+# update_user_password.py
+"""
+Script to update the password for a given username in the production database.
+"""
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from app.db.models.user import User
+from app.core.security import get_password_hash
 
 DATABASE_URL = "postgresql://astrobsm_dboracle_user:WttcHRFGuDdzcwFn5YtdcNodlshXJ3sT@dpg-cp1v1g1gkuv2qv7v7v80-a.oregon-postgres.render.com/astrobsm_dboracle"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-def update_status(username, new_status):
+def update_password(username, new_password):
     session = SessionLocal()
     try:
         user = session.query(User).filter(User.username == username).first()
         if not user:
             print(f"User '{username}' not found.")
             return
-        user.status = new_status
+        user.hashed_password = get_password_hash(new_password)
         session.commit()
-        print(f"Status updated for user '{username}' to '{new_status}'.")
+        print(f"Password updated for user '{username}'.")
     except Exception as e:
-        print(f"Error updating status: {e}")
+        print(f"Error updating password: {e}")
         session.rollback()
     finally:
         session.close()
 
 if __name__ == "__main__":
-    update_status("blakvelvet", "active")
+    update_password("blakvelvet", "chibuike_douglas")
