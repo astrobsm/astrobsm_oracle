@@ -24,11 +24,14 @@ app = FastAPI(title="AstroBSM-Oracle IVANSTAMAS")
 # Allow all origins for development (not for production!)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for development
+    allow_origins=[
+        "https://astrobsm-oracle-backend.onrender.com",
+        "https://astrobsm-oracle.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"],  # Expose all headers
+    expose_headers=["*"],
     max_age=600,            # Cache preflight response for 10 minutes
 )
 
