@@ -9,6 +9,7 @@ from .endpoints import suppliers, staff, settings, customers, warehouses, produc
 from .endpoints import reports
 from .endpoints.devices import router as devices_router
 from .endpoints.device_maintenance import router as device_maintenance_router
+from .endpoints import auth
 # Add other endpoint imports as needed
 
 api_router.include_router(payroll_router, tags=["payroll"])
@@ -31,4 +32,5 @@ api_router.include_router(reports.router, prefix="/reports", tags=["Reports"])
 api_router.include_router(reports.router, tags=["Reports"])
 api_router.include_router(devices_router, prefix="/devices", tags=["Devices"])
 api_router.include_router(device_maintenance_router, prefix="/device-maintenance", tags=["Device Maintenance"])
+api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 # Include other routers as needed
