@@ -80,7 +80,7 @@ const App = () => {
     return (
         <div className="app-container">
             <Sidebar />
-            <div className="page-container">
+            <div className="page-container" id="main-content">
                 <Routes>
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/dashboard" element={<AdminDashboard />} />

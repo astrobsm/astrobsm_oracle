@@ -52,10 +52,38 @@
     z-index: 1000;
     transition: left 0.3s;
     background: #228b22;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+    will-change: left;
+    transition: left 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s;
   }
   .sidebar.open {
     left: 0;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.25);
+  }
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.25);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .sidebar.open ~ .sidebar-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .main-content, .page-container, .container {
+    transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .sidebar.open ~ .main-content,
+  .sidebar.open ~ .page-container,
+  .sidebar.open ~ .container {
+    margin-left: 250px;
   }
   .sidebar-toggle {
     display: block;
@@ -71,19 +99,25 @@
     padding: 5px 10px;
     cursor: pointer;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
-    transition: left 0.3s;
+    transition: left 0.3s, background 0.2s, box-shadow 0.2s;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
   }
-  .sidebar:not(.open) + .sidebar-toggle {
-    left: 0;
-    background: #228b22;
-    color: #fff;
-    border-radius: 50%;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+  .sidebar-toggle:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
   }
-  .sidebar-backdrop {
-    display: none;
+  /* Swipe gesture hint (JS required for full support) */
+  body {
+    touch-action: pan-y;
+  }
+  /* Hide sidebar when navigating (JS required, but class support here) */
+  .sidebar.closing {
+    left: -250px !important;
+    box-shadow: none;
   }
 }
+
 @media (max-width: 600px) {
   h1, .header-title {
     font-size: 1.5rem !important;
@@ -92,4 +126,24 @@
     padding: 5px !important;
     font-size: 1rem !important;
   }
+  .sidebar {
+    width: 80vw;
+    min-width: 180px;
+    max-width: 320px;
+  }
+  .sidebar.open ~ .main-content,
+  .sidebar.open ~ .page-container,
+  .sidebar.open ~ .container {
+    margin-left: 80vw;
+  }
+}
+
+/* Accessibility: visually hide backdrop when not active */
+.sidebar-backdrop[aria-hidden="true"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.sidebar-backdrop[aria-hidden="false"] {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
