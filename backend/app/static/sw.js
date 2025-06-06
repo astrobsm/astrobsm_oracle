@@ -8,7 +8,7 @@ self.addEventListener('install', (event) => {
                 '/index.html',
                 '/styles.css',
                 '/scripts.js',
-                '/api/*',
+                // '/api/*', // Removed: wildcard caching is not supported and causes 404s
             ]);
         })
     );
