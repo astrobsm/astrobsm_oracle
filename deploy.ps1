@@ -33,12 +33,11 @@ git commit -m "$commitMsg"
 Write-Host "[5/7] Pushing to GitHub..." -ForegroundColor Cyan
 git push
 
-Write-Host "[6/7] Dropping ALL tables and alembic_version in production database (for full migration reset)..." -ForegroundColor Cyan
+Write-Host "[6/7] Dropping and recreating public schema in production database (for full migration reset)..." -ForegroundColor Cyan
 Set-Location "$projectRoot\backend"
-python drop_all_tables.py
-python drop_alembic_version.py
+python drop_and_recreate_db.py
 Set-Location $projectRoot
-Write-Host "All tables and Alembic version table dropped. Next deploy will re-apply all migrations from scratch."
+Write-Host "Public schema dropped and recreated. Next deploy will re-apply all migrations from scratch."
 
 Write-Host "[7/7] Seeding test data for all registration types..." -ForegroundColor Cyan
 Set-Location "$projectRoot\backend"

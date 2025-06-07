@@ -5,6 +5,8 @@ You must have the 'psycopg2' package installed and permission to drop/create dat
 """
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from sqlalchemy import create_engine, text
+import os
 
 DB_NAME = "astrobsm_oracle"
 DB_USER = "postgres"
@@ -29,4 +31,16 @@ print(f"Created database: {DB_NAME}")
 
 cur.close()
 conn.close()
+
+# Schema management
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise Exception("DATABASE_URL environment variable not set!")
+
+engine = create_engine(DATABASE_URL)
+with engine.connect() as conn:
+    conn.execute(text("DROP SCHEMA public CASCADE;"))
+    conn.execute(text("CREATE SCHEMA public;"))
+    print("Schema dropped and recreated.")
+
 print("Done.")
