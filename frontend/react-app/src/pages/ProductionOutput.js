@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './ProductionOutput.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const ProductionOutput = () => {
     const [products, setProducts] = useState([]);
     const [staff, setStaff] = useState([]);
@@ -15,8 +17,8 @@ const ProductionOutput = () => {
     useEffect(() => {
         const fetchProductsAndStaff = async () => {
             try {
-                const productResponse = await fetch('http://localhost:8000/api/v1/products');
-                const staffResponse = await fetch('http://localhost:8000/api/v1/staff');
+                const productResponse = await fetch(`${API_BASE_URL}/products`);
+                const staffResponse = await fetch(`${API_BASE_URL}/staff`);
 
                 if (!productResponse.ok || !staffResponse.ok) {
                     throw new Error('Failed to fetch data');
@@ -46,7 +48,7 @@ const ProductionOutput = () => {
         setLoading(true);
         setMessage('');
         try {
-            const response = await fetch('http://localhost:8000/api/v1/production-output', {
+            const response = await fetch(`${API_BASE_URL}/production-output`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

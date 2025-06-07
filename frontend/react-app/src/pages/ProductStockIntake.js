@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './ProductStockIntake.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const ProductStockIntake = () => {
     const [products, setProducts] = useState([]);
     const [staff, setStaff] = useState([]);
@@ -19,7 +21,7 @@ const ProductStockIntake = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/products');
+                const response = await fetch(`${API_BASE_URL}/products`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setProducts(data);
@@ -35,7 +37,7 @@ const ProductStockIntake = () => {
 
         const fetchStaff = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/staff');
+                const response = await fetch(`${API_BASE_URL}/staff`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setStaff(data);
@@ -51,7 +53,7 @@ const ProductStockIntake = () => {
 
         const fetchWarehouses = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/warehouses');
+                const response = await fetch(`${API_BASE_URL}/warehouses`);
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setWarehouses(data);
@@ -78,7 +80,7 @@ const ProductStockIntake = () => {
         setLoading(true);
         setMessage('');
         try {
-            const response = await fetch('http://localhost:8000/api/v1/product-stock-intake', {
+            const response = await fetch(`${API_BASE_URL}/product-stock-intake`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

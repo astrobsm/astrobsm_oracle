@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import AdminSection from '../components/AdminSection';
 import './AdminReports.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const AdminReports = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +12,7 @@ const AdminReports = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/reports');
+        const response = await fetch(`${API_BASE_URL}/reports`);
         if (!response.ok) throw new Error('Failed to fetch reports');
         const data = await response.json();
         setReports(data);

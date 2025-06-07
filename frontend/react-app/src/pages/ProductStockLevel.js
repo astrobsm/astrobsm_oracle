@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './ProductStockLevel.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const REFRESH_INTERVAL = 10000; // 10 seconds
 
 const ProductStockLevel = () => {
@@ -12,7 +13,7 @@ const ProductStockLevel = () => {
 
     const fetchStockLevels = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/v1/inventory/stock-level');
+            const response = await axios.get(`${API_BASE_URL}/inventory/stock-level`);
             setStockLevels(response.data);
             setError(null);
         } catch (err) {

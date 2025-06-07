@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import AdminSection from '../components/AdminSection';
 import './AdminSettings.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const AdminSettings = () => {
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -10,7 +12,7 @@ const AdminSettings = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/settings');
+        const response = await fetch(`${API_BASE_URL}/settings`);
         if (!response.ok) throw new Error('Failed to fetch settings');
         const data = await response.json();
         setSettings(data);

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './ProductionConsole.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const ProductionConsole = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState('');
@@ -10,7 +12,7 @@ const ProductionConsole = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/products');
+                const response = await fetch(`${API_BASE_URL}/products`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
                 }
@@ -25,7 +27,7 @@ const ProductionConsole = () => {
 
     const calculateMaterials = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/production-requirements/${selectedProduct}`);
+            const response = await fetch(`${API_BASE_URL}/production-requirements/${selectedProduct}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch production requirements');
             }
@@ -42,7 +44,7 @@ const ProductionConsole = () => {
 
     const handleApproveAndExport = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/v1/approve-production', {
+            const response = await fetch(`${API_BASE_URL}/approve-production`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

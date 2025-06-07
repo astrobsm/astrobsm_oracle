@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './NewPage.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const NewPage = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/data-endpoint');
+                const response = await fetch(`${API_BASE_URL}/data-endpoint`);
                 const result = await response.json();
                 setData(result);
             } catch (error) {

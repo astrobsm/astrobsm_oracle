@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './ProductionAnalysis.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const ProductionAnalysis = () => {
     const [productionData, setProductionData] = useState([]);
 
     useEffect(() => {
         const fetchProductionData = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/production-analysis');
+                const response = await fetch(`${API_BASE_URL}/production-analysis`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch production data');
                 }

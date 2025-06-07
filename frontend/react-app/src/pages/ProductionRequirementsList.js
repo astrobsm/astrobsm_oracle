@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './RegisterProductionRequirement.css';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const ProductionRequirementsList = ({ onEdit }) => {
     const [requirements, setRequirements] = useState([]);
@@ -13,9 +14,9 @@ const ProductionRequirementsList = ({ onEdit }) => {
             setLoading(true);
             try {
                 const [reqRes, prodRes, matRes] = await Promise.all([
-                    fetch('http://localhost:8000/api/v1/production-requirements'),
-                    fetch('http://localhost:8000/api/v1/inventory/products'),
-                    fetch('http://localhost:8000/api/v1/inventory/raw-materials'),
+                    fetch(`${API_BASE_URL}/production-requirements`),
+                    fetch(`${API_BASE_URL}/inventory/products`),
+                    fetch(`${API_BASE_URL}/inventory/raw-materials`),
                 ]);
                 if (!reqRes.ok) throw new Error('Failed to fetch requirements: ' + reqRes.status);
                 if (!prodRes.ok) throw new Error('Failed to fetch products: ' + prodRes.status);
@@ -44,7 +45,7 @@ const ProductionRequirementsList = ({ onEdit }) => {
     const handleDelete = async (id) => {
         if (!window.confirm('Delete this production requirement?')) return;
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/production-requirements/${id}`, { method: 'DELETE' });
+            const response = await fetch(`${API_BASE_URL}/production-requirements/${id}`, { method: 'DELETE' });
             if (!response.ok) throw new Error('Delete failed');
             setRequirements(requirements.filter(r => r.id !== id));
         } catch (err) {
