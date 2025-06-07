@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import './GenerateInvoice.css';
-import API_BASE_URL from '../config';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const GenerateInvoice = () => {
     const [customers, setCustomers] = useState([]);
@@ -23,29 +23,21 @@ const GenerateInvoice = () => {
         const fetchCustomers = async () => {
             try {
                 const response = await fetch(`${API_BASE_URL}/customers`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
                 const data = await response.json();
-                setCustomers(data);
+                setCustomers(Array.isArray(data) ? data : []);
             } catch (error) {
-                console.error('Error fetching customers:', error);
+                setCustomers([]);
             }
         };
-
         const fetchProducts = async () => {
             try {
                 const response = await fetch(`${API_BASE_URL}/products`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
                 const data = await response.json();
-                setProducts(data);
+                setProducts(Array.isArray(data) ? data : []);
             } catch (error) {
-                console.error('Error fetching products:', error);
+                setProducts([]);
             }
         };
-
         fetchCustomers();
         fetchProducts();
     }, []);
@@ -189,6 +181,7 @@ const GenerateInvoice = () => {
                         required
                     >
                         <option value="">Select a customer</option>
+                        {customers.length === 0 && <option disabled>No customers found</option>}
                         {customers.map((customer) => (
                             <option key={customer.id} value={customer.id}>{customer.name}</option>
                         ))}
@@ -207,6 +200,7 @@ const GenerateInvoice = () => {
                                 onChange={(e) => handleProductChange(index, 'product', e.target.value)}
                             >
                                 <option value="">Select Product</option>
+                                {products.length === 0 && <option disabled>No products found</option>}
                                 {products.map((product) => (
                                     <option key={product.id} value={product.id}>{product.name}</option>
                                 ))}

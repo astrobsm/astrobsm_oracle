@@ -23,48 +23,29 @@ const ProductStockIntake = () => {
             try {
                 const response = await fetch(`${API_BASE_URL}/products`);
                 const data = await response.json();
-                if (Array.isArray(data)) {
-                    setProducts(data);
-                } else {
-                    console.error('API did not return an array:', data);
-                    setProducts([]); // Fallback to an empty array
-                }
+                setProducts(Array.isArray(data) ? data : []);
             } catch (error) {
-                console.error('Error fetching products:', error);
-                setProducts([]); // Fallback to an empty array
+                setProducts([]);
             }
         };
-
         const fetchStaff = async () => {
             try {
                 const response = await fetch(`${API_BASE_URL}/staff`);
                 const data = await response.json();
-                if (Array.isArray(data)) {
-                    setStaff(data);
-                } else {
-                    console.error('API did not return an array:', data);
-                    setStaff([]); // Fallback to an empty array
-                }
+                setStaff(Array.isArray(data) ? data : []);
             } catch (error) {
-                console.error('Error fetching staff:', error);
-                setStaff([]); // Fallback to an empty array
+                setStaff([]);
             }
         };
-
         const fetchWarehouses = async () => {
             try {
                 const response = await fetch(`${API_BASE_URL}/warehouses`);
                 const data = await response.json();
-                if (Array.isArray(data)) {
-                    setWarehouses(data);
-                } else {
-                    setWarehouses([]);
-                }
+                setWarehouses(Array.isArray(data) ? data : []);
             } catch (error) {
                 setWarehouses([]);
             }
         };
-
         fetchProducts();
         fetchStaff();
         fetchWarehouses();
@@ -131,6 +112,7 @@ const ProductStockIntake = () => {
                         required
                     >
                         <option value="">--Select Product--</option>
+                        {products.length === 0 && <option disabled>No products found</option>}
                         {products.map((product) => (
                             <option key={product.id} value={product.id}>{product.name}</option>
                         ))}
@@ -189,6 +171,7 @@ const ProductStockIntake = () => {
                         required
                     >
                         <option value="">--Select Warehouse--</option>
+                        {warehouses.length === 0 && <option disabled>No warehouses found</option>}
                         {warehouses.map((wh) => (
                             <option key={wh.id} value={wh.id}>{wh.name} ({wh.location})</option>
                         ))}

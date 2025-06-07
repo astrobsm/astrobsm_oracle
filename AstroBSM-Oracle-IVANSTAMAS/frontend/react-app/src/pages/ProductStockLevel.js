@@ -14,9 +14,10 @@ const ProductStockLevel = () => {
     const fetchStockLevels = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/inventory/stock-level`);
-            setStockLevels(response.data);
+            setStockLevels(Array.isArray(response.data) ? response.data : []);
             setError(null);
         } catch (err) {
+            setStockLevels([]);
             setError('Could not fetch stock levels.');
         } finally {
             setLoading(false);
@@ -57,6 +58,9 @@ const ProductStockLevel = () => {
                     </tr>
                 </thead>
                 <tbody>
+                    {stockLevels.length === 0 && (
+                        <tr><td colSpan="4">No stock levels found</td></tr>
+                    )}
                     {stockLevels.map((item) => (
                         <tr key={item.id + '-' + (item.warehouse_name || item.warehouseId || '')} className={item.available_quantity <= item.reorder_point ? 'low-stock' : ''}>
                             <td>{item.productName || item.name}</td>

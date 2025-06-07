@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import QrScanner from 'react-qr-scanner';
 import './TimedAttendance.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "";
+
 const TimedAttendance = () => {
     const [action, setAction] = useState('time-in');
     const [message, setMessage] = useState('');
@@ -11,9 +13,9 @@ const TimedAttendance = () => {
     const [staffList, setStaffList] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/v1/staff')
+        fetch(`${API_BASE_URL}/api/v1/staff/`)
             .then((res) => res.json())
-            .then((data) => setStaffList(data))
+            .then((data) => setStaffList(Array.isArray(data) ? data : []))
             .catch((err) => console.error('Failed to fetch staff:', err));
     }, []);
 
@@ -55,6 +57,7 @@ const TimedAttendance = () => {
                 Select Staff:
                 <select value={selectedStaff} onChange={handleStaffChange}>
                     <option value="">-- Select Staff --</option>
+                    {staffList.length === 0 && <option disabled>No staff found</option>}
                     {staffList.map((staff) => (
                         <option key={staff.id} value={staff.id}>
                             {staff.name} ({staff.staff_id})
