@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './StaffList.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const StaffList = () => {
     const [staff, setStaff] = useState([]);
 
@@ -8,7 +10,7 @@ const StaffList = () => {
         const fetchStaff = async () => {
             try {
                 // Always use the trailing slash to avoid CORS/redirect issues
-                const response = await fetch('http://localhost:8000/api/v1/staff/');
+                const response = await fetch(`${API_BASE_URL}/staff/`);
                 const data = await response.json();
                 setStaff(Array.isArray(data) ? data : []);
             } catch (error) {
