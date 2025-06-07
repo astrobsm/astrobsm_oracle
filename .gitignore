@@ -1,0 +1,31 @@
+# .gitignore for Python backend
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+.env
+.env.*
+*.log
+*.pot
+*.mo
+*.swp
+.DS_Store
+.vscode/
+.idea/
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+*.bak
+*.tmp
+node_modules/
+
+# Ignore frontend build artifacts
+frontend/react-app/build/
+frontend/angular-production-module-new/dist/
+
+# Ignore OS files
+Thumbs.db
