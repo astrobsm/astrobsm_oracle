@@ -200,6 +200,11 @@ class StaffOut(BaseModel):
     next_of_kin_phone: Optional[str]
     bank_name: Optional[str]
     account_number: Optional[str]
+    address: Optional[str]
+    hourly_rate: Optional[float]
+    role: Optional[str]
+    department: Optional[str]
+    appointment_type: Optional[str]
 
     class Config:
         from_attributes = True
