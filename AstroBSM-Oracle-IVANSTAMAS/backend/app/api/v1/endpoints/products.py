@@ -24,3 +24,7 @@ def get_products(db: Session = Depends(get_db)):
         }
         for p in products
     ]
+
+@router.get("", include_in_schema=False)
+def get_products_no_slash(db: Session = Depends(get_db)):
+    return get_products(db)

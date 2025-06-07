@@ -18,3 +18,7 @@ def get_warehouses(db: Session = Depends(get_db)):
         }
         for w in warehouses
     ]
+
+@router.get("", include_in_schema=False)
+def get_warehouses_no_slash(db: Session = Depends(get_db)):
+    return get_warehouses(db)

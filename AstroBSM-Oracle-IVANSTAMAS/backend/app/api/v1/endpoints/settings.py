@@ -18,3 +18,5 @@ def get_settings_with_slash(db: Session = Depends(get_db)):
     if not settings:
         raise HTTPException(status_code=404, detail="No settings found")
     return settings
+
+# Both @router.get("") and @router.get("/") are present for settings.

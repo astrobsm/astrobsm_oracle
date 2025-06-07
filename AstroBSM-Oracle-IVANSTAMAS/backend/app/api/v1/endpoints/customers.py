@@ -25,3 +25,7 @@ def get_customers(db: Session = Depends(get_db)):
         print("❌ ERROR fetching customers:")
         traceback.print_exc()  # 👈 This prints the full stack trace in the terminal
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
+@router.get("", include_in_schema=False)
+def get_customers_no_slash(db: Session = Depends(get_db)):
+    return get_customers(db)
