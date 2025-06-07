@@ -18,5 +18,10 @@ class Staff(Base):
     next_of_kin_phone = Column(String, nullable=False)
     bank_name = Column(String, nullable=False)
     account_number = Column(String, nullable=False)
+    address = Column(String, nullable=True)
+    hourly_rate = Column(Float, nullable=True)
+    role = Column(String, nullable=True)
+    department = Column(String, nullable=True)
+    appointment_type = Column(String, nullable=True)
 
     device_intakes = relationship("DeviceIntake", back_populates="staff")
