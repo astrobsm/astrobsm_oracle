@@ -1,27 +1,36 @@
-# PowerShell script to rebuild React, update backend static files, commit, and push
-# Save this as deploy.ps1 in your project root and run it from there
+# PowerShell script: Build React, deploy to backend static, commit, and push
+# Run from project root after making changes to frontend or backend
 
-# Navigate to project root
+$ErrorActionPreference = 'Stop'
+
 $projectRoot = "C:\Users\USER\Documents\SOFTWARE DEVELOPEMENT\ORACLE DEVELOPEMENT\AstroBSM-Oracle-IVANSTAMAS"
-Set-Location $projectRoot
+$reactApp = "$projectRoot\frontend\react-app"
+$reactBuild = "$reactApp\build"
+$backendStatic = "$projectRoot\backend\app\static"
 
-# Build React frontend
-Write-Host "Building React frontend..."
-cd frontend/react-app
+Write-Host "[1/5] Building React frontend..." -ForegroundColor Cyan
+Set-Location $reactApp
 npm run build
-cd ../..
 
-# Copy build output to backend static directory
-Write-Host "Copying build output to backend static directory..."
-Copy-Item -Path frontend/react-app/build/* -Destination backend/app/static/ -Recurse -Force
+Write-Host "[2/5] Copying build output to backend static directory..." -ForegroundColor Cyan
+Set-Location $projectRoot
+if (!(Test-Path $backendStatic)) {
+    Write-Host "Backend static directory not found. Creating: $backendStatic"
+    New-Item -ItemType Directory -Path $backendStatic | Out-Null
+}
+# Remove old static files except .gitkeep (if present)
+Get-ChildItem -Path $backendStatic -Recurse | Where-Object { $_.Name -ne '.gitkeep' } | Remove-Item -Force -Recurse
+Copy-Item -Path "$reactBuild\*" -Destination $backendStatic -Recurse
 
-# Stage changes
-Write-Host "Staging changes for git..."
-git add frontend/react-app/src/config.js backend/app/static/
+Write-Host "[3/5] Staging all changes for git..." -ForegroundColor Cyan
+Set-Location $projectRoot
+git add .
 
-# Commit and push
-Write-Host "Committing and pushing to GitHub..."
-git commit -m "Automated deploy: Rebuild React, update static files, and ensure correct API base URL for CORS-free deployment"
+Write-Host "[4/5] Committing changes..." -ForegroundColor Cyan
+$commitMsg = "Automated build+deploy: React rebuilt, static files updated, and all changes committed"
+git commit -m "$commitMsg"
+
+Write-Host "[5/5] Pushing to GitHub..." -ForegroundColor Cyan
 git push
 
-Write-Host "Deployment script complete. Check Render for redeployment status."
+Write-Host "✅ Build, deploy, and git push complete. Check your backend deployment and frontend UI."
