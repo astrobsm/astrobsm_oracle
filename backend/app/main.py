@@ -145,3 +145,13 @@ async def custom_404_handler(request: StarletteRequest, exc):
         if os.path.exists(index_path):
             return FileResponse(index_path)
     return StarletteResponse("Not Found", status_code=404)
+
+# Serve sw.js with correct MIME type (for Service Worker)
+from fastapi.responses import FileResponse as FastAPIFileResponse
+
+@app.get('/sw.js')
+def service_worker():
+    sw_path = os.path.join(os.path.dirname(__file__), 'static', 'sw.js')
+    if os.path.exists(sw_path):
+        return FastAPIFileResponse(sw_path, media_type='application/javascript')
+    return StarletteResponse('Not Found', status_code=404)
