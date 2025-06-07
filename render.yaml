@@ -4,7 +4,7 @@ services:
     runtime: python
     rootDir: AstroBSM-Oracle-IVANSTAMAS/backend
     buildCommand: pip install -r requirements.txt && cd ../frontend/react-app && npm install && npm run build && cp -r build ../../backend/app/static
-    startCommand: python ../AstroBSM-Oracle-IVANSTAMAS/backend/drop_and_recreate_db.py && PYTHONPATH=app alembic -c alembic.ini upgrade head && python app/scripts/seed_test_data.py && uvicorn app.main:app --host 0.0.0.0 --port 10000
+    startCommand: PYTHONPATH=. alembic -c alembic.ini upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 10000
     envVars:
       - key: DATABASE_URL
         value: postgresql://astrobsm:WttcHRFGuDdzcwFn5YtdcNodlshXJ3sT@dpg-d10a2i8gjchc73agp9a0-a/bonnesantemedical_db
