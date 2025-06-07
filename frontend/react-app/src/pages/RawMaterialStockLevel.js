@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './RawMaterialStockLevel.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const RawMaterialStockLevel = () => {
     const [rawMaterials, setRawMaterials] = useState([]);
 
     useEffect(() => {
         const fetchRawMaterials = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/raw-material-stock-level');
+                const response = await fetch(`${API_BASE_URL}/raw-material-stock-level`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch raw material stock levels');
                 }

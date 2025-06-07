@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './RawMaterialStockIntake.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const RawMaterialStockIntake = () => {
     const [rawMaterials, setRawMaterials] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
@@ -20,10 +22,10 @@ const RawMaterialStockIntake = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const rawMaterialResponse = await fetch('http://localhost:8000/api/v1/inventory/raw-materials');
-                const supplierResponse = await fetch('http://localhost:8000/api/v1/suppliers');
-                const staffResponse = await fetch('http://localhost:8000/api/v1/staff');
-                const productResponse = await fetch('http://localhost:8000/api/v1/inventory/products');
+                const rawMaterialResponse = await fetch(`${API_BASE_URL}/inventory/raw-materials`);
+                const supplierResponse = await fetch(`${API_BASE_URL}/suppliers`);
+                const staffResponse = await fetch(`${API_BASE_URL}/staff`);
+                const productResponse = await fetch(`${API_BASE_URL}/inventory/products`);
 
                 if (!rawMaterialResponse.ok || !supplierResponse.ok || !staffResponse.ok || !productResponse.ok) {
                     throw new Error('Failed to fetch data');
@@ -51,7 +53,7 @@ const RawMaterialStockIntake = () => {
         setLoading(true);
         setMessage('');
         try {
-            const response = await fetch('http://localhost:8000/api/v1/raw-material-stock-intake', {
+            const response = await fetch(`${API_BASE_URL}/raw-material-stock-intake`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

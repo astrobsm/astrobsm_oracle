@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './RegisterProductionRequirement.css';
 import ProductionRequirementsList from './ProductionRequirementsList';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const RegisterProductionRequirement = () => {
     const [products, setProducts] = useState([]);
     const [rawMaterials, setRawMaterials] = useState([]);
@@ -16,9 +18,9 @@ const RegisterProductionRequirement = () => {
         const fetchProductsAndMaterials = async () => {
             try {
                 // Fetch products from the correct inventory endpoint
-                const productResponse = await fetch('http://localhost:8000/api/v1/inventory/products');
+                const productResponse = await fetch(`${API_BASE_URL}/inventory/products`);
                 // Fetch raw materials from the correct inventory endpoint
-                const materialResponse = await fetch('http://localhost:8000/api/v1/inventory/raw-materials');
+                const materialResponse = await fetch(`${API_BASE_URL}/inventory/raw-materials`);
 
                 if (!productResponse.ok || !materialResponse.ok) {
                     throw new Error('Failed to fetch data');
@@ -49,7 +51,7 @@ const RegisterProductionRequirement = () => {
         setLoading(true);
         setMessage('');
         try {
-            const response = await fetch('http://localhost:8000/api/v1/production-requirements', {
+            const response = await fetch(`${API_BASE_URL}/production-requirements`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

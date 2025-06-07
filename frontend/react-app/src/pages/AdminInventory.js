@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import AdminSection from '../components/AdminSection';
 import './AdminInventory.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const AdminInventory = () => {
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +12,7 @@ const AdminInventory = () => {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/inventory/stock-level');
+        const response = await fetch(`${API_BASE_URL}/inventory/stock-level`);
         if (!response.ok) throw new Error('Failed to fetch inventory');
         const data = await response.json();
         setInventory(data);

@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import './Registration.css';
 import { saveFormData } from '../db/indexedDB';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const Registration = () => {
     const [formData, setFormData] = useState({
         type: 'staff',
@@ -17,7 +19,7 @@ const Registration = () => {
     useEffect(() => {
         const fetchSuppliers = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/suppliers');
+                const response = await fetch(`${API_BASE_URL}/suppliers`);
                 const data = await response.json();
                 setSuppliers(data);
             } catch (error) {
@@ -64,7 +66,7 @@ const Registration = () => {
             // Map frontend fields to backend payloads and endpoints
             switch (type) {
                 case 'staff':
-                    endpoint = 'http://localhost:8000/api/v1/registration/staff-profile';
+                    endpoint = `${API_BASE_URL}/registration/staff-profile`;
                     payload = {
                         name: fields.staffName,
                         staff_id: fields.staffId || `ASTRO${Math.floor(1000 + Math.random() * 9000)}`,
@@ -81,7 +83,7 @@ const Registration = () => {
                     };
                     break;
                 case 'product':
-                    endpoint = 'http://localhost:8000/api/v1/registration/product';
+                    endpoint = `${API_BASE_URL}/registration/product`;
                     payload = {
                         name: fields.productName,
                         product_id: fields.productId || undefined,
@@ -94,7 +96,7 @@ const Registration = () => {
                     };
                     break;
                 case 'raw_material':
-                    endpoint = 'http://localhost:8000/api/v1/registration/raw-material';
+                    endpoint = `${API_BASE_URL}/registration/raw-material`;
                     payload = {
                         name: fields.rawMaterialName,
                         rm_id: fields.rawMaterialId || undefined,
@@ -107,7 +109,7 @@ const Registration = () => {
                     };
                     break;
                 case 'customer':
-                    endpoint = 'http://localhost:8000/api/v1/registration/customer';
+                    endpoint = `${API_BASE_URL}/registration/customer`;
                     payload = {
                         name: fields.customerName,
                         company: fields.company || '',
@@ -116,7 +118,7 @@ const Registration = () => {
                     };
                     break;
                 case 'warehouse':
-                    endpoint = 'http://localhost:8000/api/v1/registration/warehouse';
+                    endpoint = `${API_BASE_URL}/registration/warehouse`;
                     payload = {
                         name: fields.warehouseName,
                         wh_id: fields.warehouseId || `WH${Math.floor(1000 + Math.random() * 9000)}`,
@@ -127,7 +129,7 @@ const Registration = () => {
                     };
                     break;
                 case 'supplier':
-                    endpoint = 'http://localhost:8000/api/v1/registration/supplier';
+                    endpoint = `${API_BASE_URL}/registration/supplier`;
                     payload = {
                         name: fields.supplierName,
                         phone: fields.contactPhone, // use the correct field from the form
@@ -136,7 +138,7 @@ const Registration = () => {
                     };
                     break;
                 case 'distributor':
-                    endpoint = 'http://localhost:8000/api/v1/registration/distributor';
+                    endpoint = `${API_BASE_URL}/registration/distributor`;
                     payload = {
                         name: fields.distributorName,
                         dist_id: fields.distributorId || `DIST${Math.floor(1000 + Math.random() * 9000)}`,
@@ -146,7 +148,7 @@ const Registration = () => {
                     };
                     break;
                 case 'marketer':
-                    endpoint = 'http://localhost:8000/api/v1/registration/marketer';
+                    endpoint = `${API_BASE_URL}/registration/marketer`;
                     payload = {
                         name: fields.marketerName,
                         mark_id: fields.marketerId || `MARK${Math.floor(1000 + Math.random() * 9000)}`,

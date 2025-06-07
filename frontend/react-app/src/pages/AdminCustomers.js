@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import AdminSection from '../components/AdminSection';
 import './AdminCustomers.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const AdminCustomers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +12,7 @@ const AdminCustomers = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/customers');
+        const response = await fetch(`${API_BASE_URL}/customers`);
         if (!response.ok) throw new Error('Failed to fetch customers');
         const data = await response.json();
         setCustomers(data);
