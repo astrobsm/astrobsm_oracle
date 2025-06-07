@@ -44,13 +44,12 @@
     box-sizing: border-box;
   }
   .sidebar {
-    position: absolute;
+    position: fixed;
     left: -250px;
     top: 0;
     width: 250px;
     height: 100vh;
     z-index: 1000;
-    transition: left 0.3s;
     background: #228b22;
     box-shadow: 2px 0 8px rgba(0,0,0,0.15);
     will-change: left;
@@ -80,16 +79,16 @@
   .main-content, .page-container, .container {
     transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1);
   }
-  .sidebar.open ~ .main-content,
-  .sidebar.open ~ .page-container,
-  .sidebar.open ~ .container {
+  body.sidebar-open .main-content,
+  body.sidebar-open .page-container,
+  body.sidebar-open .container {
     margin-left: 250px;
   }
   .sidebar-toggle {
     display: block;
-    position: absolute;
+    position: fixed;
     top: 20px;
-    left: 250px;
+    left: 20px;
     z-index: 1100;
     background: #228b22;
     color: #fff;
@@ -107,11 +106,9 @@
     outline: 2px solid #fff;
     outline-offset: 2px;
   }
-  /* Swipe gesture hint (JS required for full support) */
   body {
     touch-action: pan-y;
   }
-  /* Hide sidebar when navigating (JS required, but class support here) */
   .sidebar.closing {
     left: -250px !important;
     box-shadow: none;
@@ -131,9 +128,9 @@
     min-width: 180px;
     max-width: 320px;
   }
-  .sidebar.open ~ .main-content,
-  .sidebar.open ~ .page-container,
-  .sidebar.open ~ .container {
+  body.sidebar-open .main-content,
+  body.sidebar-open .page-container,
+  body.sidebar-open .container {
     margin-left: 80vw;
   }
 }
