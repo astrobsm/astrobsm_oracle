@@ -11,4 +11,4 @@ class DeviceFaultReport(Base):
     fault_nature = Column(String, nullable=False)
     action_required = Column(String, nullable=False)
 
-    device = relationship('Device', backref='fault_reports')
+    device = relationship('Device', back_populates='fault_reports')
