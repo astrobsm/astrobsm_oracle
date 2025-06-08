@@ -3,6 +3,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import API_BASE_URL from '../config';
 import './SalesSummary.css';
 
 const columns = [
@@ -36,34 +39,81 @@ function sendReminder(invoice) {
 }
 
 const SalesSummary = () => {
-  const [invoices, setInvoices] = useState([]);
+  const [summary, setSummary] = useState(null);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchInvoices = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/v1/invoices');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        setInvoices(Array.isArray(data) ? data.map((inv, i) => ({ ...inv, id: inv.id || i })) : []);
-      } catch (error) {
-        setInvoices([]);
-      }
-    };
-    fetchInvoices();
-  }, []);
+  const fetchSummary = async () => {
+    if (!startDate || !endDate) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/reports/sales?start_date=${startDate}&end_date=${endDate}`);
+      if (!response.ok) throw new Error('Failed to fetch sales summary');
+      const data = await response.json();
+      setSummary(data);
+    } catch (err) {
+      setError(err.message);
+      setSummary(null);
+    }
+    setLoading(false);
+  };
 
   return (
-    <Box className="sales-summary-container" sx={{ height: 600, width: '100%' }}>
+    <Box className="sales-summary-container" sx={{ maxWidth: 1200, mx: 'auto', mt: 4 }}>
       <Typography variant="h4" gutterBottom>Sales Summary</Typography>
-      <DataGrid
-        rows={invoices}
-        columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[10, 20, 50]}
-        checkboxSelection
-        disableRowSelectionOnClick
-        sx={{ background: '#fff', borderRadius: 2, boxShadow: 2 }}
-      />
+      <form className="summary-form" onSubmit={e => { e.preventDefault(); fetchSummary(); }}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} sm={5}>
+            <TextField
+              label="Start Date"
+              type="date"
+              value={startDate}
+              onChange={e => setStartDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <TextField
+              label="End Date"
+              type="date"
+              value={endDate}
+              onChange={e => setEndDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+              {loading ? 'Loading...' : 'Get Summary'}
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+      {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
+      {summary && (
+        <>
+          <Box sx={{ mt: 4, mb: 2 }}>
+            <Typography variant="h6">Summary for {summary.start_date} to {summary.end_date}</Typography>
+            <Typography>Total Sales: <b>₦{summary.total_sales?.toLocaleString(undefined, {minimumFractionDigits:2})}</b></Typography>
+            <Typography>Total VAT: <b>₦{summary.total_vat?.toLocaleString(undefined, {minimumFractionDigits:2})}</b></Typography>
+          </Box>
+          <DataGrid
+            rows={summary.transactions.map((t, i) => ({ ...t, id: t.id || i }))}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[10, 20, 50]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            sx={{ background: '#fff', borderRadius: 2, boxShadow: 2 }}
+          />
+        </>
+      )}
     </Box>
   );
 };
