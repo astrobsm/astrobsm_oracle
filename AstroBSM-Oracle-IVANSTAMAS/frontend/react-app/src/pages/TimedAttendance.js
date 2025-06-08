@@ -13,10 +13,13 @@ const TimedAttendance = () => {
     const [staffList, setStaffList] = useState([]);
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/api/v1/staff/`)
+        fetch(`${API_BASE_URL}/staff/`)
             .then((res) => res.json())
             .then((data) => setStaffList(Array.isArray(data) ? data : []))
-            .catch((err) => console.error('Failed to fetch staff:', err));
+            .catch((err) => {
+                setStaffList([]);
+                console.error('Failed to fetch staff:', err);
+            });
     }, []);
 
     const handleScanQRCode = () => {

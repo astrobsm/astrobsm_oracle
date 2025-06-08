@@ -522,13 +522,18 @@ const Registration = () => {
                         </label>
                         <label>
                             Category:
-                            <input
-                                type="text"
+                            <select
                                 name="category"
                                 value={formData.additionalFields?.category || ''}
                                 onChange={handleAdditionalFieldsChange}
                                 required
-                            />
+                            >
+                                <option value="">Select Category</option>
+                                <option value="ACTIVE AGENT">ACTIVE AGENT</option>
+                                <option value="BASE">BASE</option>
+                                <option value="PACKAGING">PACKAGING</option>
+                                <option value="CARRIER">CARRIER</option>
+                            </select>
                         </label>
                         <label>
                             Source:
