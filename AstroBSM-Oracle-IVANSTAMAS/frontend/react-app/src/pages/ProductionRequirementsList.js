@@ -13,8 +13,11 @@ const ProductionRequirementsList = ({ onEdit }) => {
         const fetchAll = async () => {
             setLoading(true);
             try {
-                const [reqRes, prodRes, matRes] = await Promise.all([
-                    fetch(`${API_BASE_URL}/production-requirements`),
+                let reqRes = await fetch(`${API_BASE_URL}/production-requirements`);
+                if (reqRes.status === 405 || reqRes.status === 404) {
+                    reqRes = await fetch(`${API_BASE_URL}/production-requirements/`);
+                }
+                const [prodRes, matRes] = await Promise.all([
                     fetch(`${API_BASE_URL}/inventory/products`),
                     fetch(`${API_BASE_URL}/inventory/raw-materials`),
                 ]);

@@ -51,14 +51,28 @@ const RegisterProductionRequirement = () => {
         setLoading(true);
         setMessage('');
         try {
-            const response = await fetch(`${API_BASE_URL}/production-requirements`, {
+            // Ensure numeric values for IDs and quantity
+            const cleanRequirements = requirements.map(r => ({
+                rawMaterialId: Number(r.rawMaterialId),
+                quantity: Number(r.quantity)
+            }));
+            const payload = {
+                productId: Number(selectedProduct),
+                requirements: cleanRequirements
+            };
+            // Try both with and without trailing slash for robustness
+            let response = await fetch(`${API_BASE_URL}/production-requirements`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId: selectedProduct, requirements })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
-
+            if (response.status === 405) {
+                response = await fetch(`${API_BASE_URL}/production-requirements/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            }
             let data;
             try {
                 data = await response.json();

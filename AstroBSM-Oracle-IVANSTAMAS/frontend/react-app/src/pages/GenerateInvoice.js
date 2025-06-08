@@ -4,6 +4,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import './GenerateInvoice.css';
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const LOGO_URL = '/logo192.png'; // Place your logo in public/logo192.png or update path
 
 const GenerateInvoice = () => {
     const [customers, setCustomers] = useState([]);
@@ -66,42 +67,69 @@ const GenerateInvoice = () => {
         setSelectedProducts(updatedProducts);
     };
 
-    const generateInvoicePDF = (status) => {
-        const doc = new jsPDF();
-        doc.setFontSize(16);
-        doc.text('Bonnesante Medicals', 14, 15);
+    const generateInvoicePDF = async (status) => {
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: [58, 150] // 58mm width for POS/thermal printer
+        });
+        // Add logo (centered at top)
+        try {
+            const logoImg = new Image();
+            logoImg.src = LOGO_URL;
+            await new Promise((resolve) => { logoImg.onload = resolve; });
+            // Center logo (max width 30mm, keep aspect ratio)
+            doc.addImage(logoImg, 'PNG', 14, 4, 30, 12, undefined, 'FAST');
+        } catch (e) {
+            // If logo fails, just skip
+        }
+        let y = 18;
         doc.setFontSize(10);
-        doc.text('Head Office: No 17A Isuofia/6B Peace Avenue, Federal Housing TransEkulu', 14, 22);
-        doc.text('Bank Name: MONIEPOINT', 14, 27);
-        doc.text('Account Name: BONNESANTE MEDICALS', 14, 32);
-        doc.text('Account Number: 8259518195', 14, 37);
-        doc.text('Bank Name: Access Bank', 14, 42);
-        doc.text('Account Name: BONNESANTE MEDICALS', 14, 47);
-        doc.text('Account Number: 1379643548', 14, 52);
-        doc.setFontSize(12);
-        doc.text(status === 'paid' ? 'Payment Receipt' : 'Invoice', 150, 15);
-        doc.text(`Customer: ${customers.find(c => c.id === parseInt(selectedCustomer))?.name || ''}`, 14, 60);
-        doc.text(`Date: ${new Date().toLocaleDateString()}`, 150, 60);
+        doc.text('Bonnesante Medicals', 29, y, { align: 'center' });
+        y += 5;
+        doc.setFontSize(7);
+        doc.text('No 17A Isuofia/6B Peace Avenue, Federal Housing TransEkulu', 29, y, { align: 'center' });
+        y += 4;
+        doc.text('Bank: MONIEPOINT 8259518195 | Access 1379643548', 29, y, { align: 'center' });
+        y += 4;
+        doc.text('Account Name: BONNESANTE MEDICALS', 29, y, { align: 'center' });
+        y += 5;
+        doc.setFontSize(9);
+        doc.text(status === 'paid' ? 'Payment Receipt' : 'Invoice', 29, y, { align: 'center' });
+        y += 6;
+        doc.setFontSize(7);
+        doc.text(`Customer: ${customers.find(c => c.id === parseInt(selectedCustomer))?.name || ''}`, 4, y);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`, 38, y);
+        y += 4;
         const tableData = selectedProducts.map((item, idx) => [
             idx + 1,
-            item.product?.name || '',
+            item.product?.name?.slice(0, 12) || '',
             item.quantity,
-            item.product?.unit_price?.toFixed(2) || '0.00',
+            (item.product?.unit_price || 0).toFixed(2),
             ((item.quantity || 0) * (item.product?.unit_price || 0)).toFixed(2)
         ]);
         autoTable(doc, {
-            head: [['#', 'Product', 'Qty', 'Unit Price', 'Total']],
+            head: [['#', 'Product', 'Qty', 'Price', 'Total']],
             body: tableData,
-            startY: 70
+            startY: y,
+            margin: { left: 2, right: 2 },
+            styles: { fontSize: 7, cellPadding: 1 },
+            headStyles: { fillColor: [142, 68, 173], textColor: 255, halign: 'center' },
+            bodyStyles: { halign: 'center' },
+            theme: 'grid',
+            tableWidth: 54
         });
-        let finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 70 + tableData.length * 10;
-        doc.text(`Subtotal: ₦${subtotal.toFixed(2)}`, 150, finalY + 10);
-        doc.text(`VAT (${vat}%): ₦${vatAmount.toFixed(2)}`, 150, finalY + 16);
-        doc.text(`Total: ₦${totalAmount.toFixed(2)}`, 150, finalY + 22);
+        let finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : y + tableData.length * 4;
+        finalY += 2;
+        doc.setFontSize(8);
+        doc.text(`Subtotal: ₦${subtotal.toFixed(2)}`, 4, finalY);
+        doc.text(`VAT (${vat}%): ₦${vatAmount.toFixed(2)}`, 4, finalY + 4);
+        doc.text(`Total: ₦${totalAmount.toFixed(2)}`, 4, finalY + 8);
         if (status === 'paid') {
-            doc.setFontSize(14);
+            doc.setFontSize(10);
             doc.setTextColor(0, 128, 0);
-            doc.text('PAID', 150, finalY + 32);
+            doc.text('PAID', 29, finalY + 14, { align: 'center' });
+            doc.setTextColor(0, 0, 0);
         }
         setPdfDoc(doc);
         setPdfType(status === 'paid' ? 'receipt' : 'invoice');
