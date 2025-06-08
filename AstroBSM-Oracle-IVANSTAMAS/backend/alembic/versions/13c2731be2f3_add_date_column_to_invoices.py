@@ -1,7 +1,7 @@
 """add date column to invoices
 
 Revision ID: 13c2731be2f3
-Revises: a99668e20c53
+Revises: c331c0ee4c80
 Create Date: 2025-05-29 23:27:40.569070
 
 """
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '13c2731be2f3'
-down_revision = 'a99668e20c53'
+down_revision = 'c331c0ee4c80'
 branch_labels = None
 depends_on = None
 

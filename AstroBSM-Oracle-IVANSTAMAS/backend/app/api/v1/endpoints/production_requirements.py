@@ -114,3 +114,15 @@ def delete_production_requirement(req_id: int, db: Session = Depends(get_db)):
     db.delete(pr)
     db.commit()
     return {"detail": "Production requirement deleted"}
+
+@router.get("/by-product/{product_id}", response_model=ProductionRequirementResponseSchema)
+def get_production_requirement_by_product(product_id: int, db: Session = Depends(get_db)):
+    pr = db.query(ProductionRequirement).filter(ProductionRequirement.product_id == product_id).first()
+    if not pr:
+        raise HTTPException(status_code=404, detail="Production requirement not found for product")
+    items = db.query(ProductionRequirementItem).filter(ProductionRequirementItem.production_requirement_id == pr.id).all()
+    return ProductionRequirementResponseSchema(
+        id=pr.id,
+        productId=pr.product_id,
+        requirements=[ProductionRequirementItemSchema(rawMaterialId=i.raw_material_id, quantity=i.quantity) for i in items]
+    )

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import date
 
 class InvoiceBase(BaseModel):
@@ -8,9 +8,16 @@ class InvoiceBase(BaseModel):
     date: date
     total_amount: float
     status: str
+    logo_url: Optional[str] = None
+    pdf_url: Optional[str] = None
+
+class InvoiceItemCreate(BaseModel):
+    product_id: int
+    quantity: int
+    price: float
 
 class InvoiceCreate(InvoiceBase):
-    pass
+    items: List[InvoiceItemCreate]
 
 class InvoiceOut(InvoiceBase):
     id: int

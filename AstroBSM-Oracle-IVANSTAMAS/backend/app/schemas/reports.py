@@ -3,10 +3,15 @@
 
 from pydantic import BaseModel
 from datetime import date
+from typing import List
+from app.schemas.invoices import InvoiceOut
 
 class SalesReport(BaseModel):
-    # Define fields for sales report
-    pass
+    total_sales: float
+    total_vat: float
+    start_date: date
+    end_date: date
+    transactions: List[InvoiceOut]
 
 class ProductionReport(BaseModel):
     # Define fields for production report

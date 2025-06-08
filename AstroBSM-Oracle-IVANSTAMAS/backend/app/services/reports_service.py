@@ -4,7 +4,10 @@
 from sqlalchemy.orm import Session
 from app.db.models.payroll import Payroll
 from app.db.models.staff import Staff
-from app.schemas.reports import SalaryReportResponse, StaffPerformanceReport, StaffPerformanceItem
+from app.db.models.invoice import Invoice
+from app.schemas.reports import SalaryReportResponse, StaffPerformanceReport, StaffPerformanceItem, SalesReport
+from app.schemas.invoices import InvoiceOut
+from sqlalchemy import func
 
 class ReportsService:
     def generate_sales_report(self):
@@ -47,3 +50,22 @@ class ReportsService:
                 production_participation=0  # TODO: Replace with real production participation
             ))
         return StaffPerformanceReport(staff=staff_list)
+
+    @staticmethod
+    def get_sales_report(db: Session, start_date: str, end_date: str) -> SalesReport:
+        # Parse dates
+        from datetime import datetime
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+        # Query invoices in range
+        invoices = db.query(Invoice).filter(Invoice.date >= start, Invoice.date <= end).all()
+        total_sales = sum(inv.total_amount for inv in invoices)
+        total_vat = sum(getattr(inv, 'vat', 0) or 0 for inv in invoices)
+        transactions = [InvoiceOut.model_validate(inv).model_dump() for inv in invoices]
+        return SalesReport(
+            total_sales=total_sales,
+            total_vat=total_vat,
+            start_date=start.date(),
+            end_date=end.date(),
+            transactions=transactions
+        )

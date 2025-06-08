@@ -14,6 +14,8 @@ class Invoice(Base):
     status = Column(String, default='unpaid')
     created_at = Column(DateTime, default=datetime.utcnow)
     date = Column(DateTime, nullable=False, default=datetime.utcnow)
+    logo_url = Column(String, nullable=True)
+    pdf_url = Column(String, nullable=True)
 
     items = relationship("InvoiceItem", back_populates="invoice")
 

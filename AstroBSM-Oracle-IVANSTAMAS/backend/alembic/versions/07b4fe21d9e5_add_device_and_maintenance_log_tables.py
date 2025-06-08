@@ -31,17 +31,6 @@ def upgrade():
     )
     op.create_index(op.f('ix_devices_id'), 'devices', ['id'], unique=False)
     # Now create tables that reference devices
-    op.create_table('device_fault_reports',
-        sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('device_id', sa.Integer(), nullable=False),
-        sa.Column('report_date', sa.DateTime(), nullable=True),
-        sa.Column('fault_description', sa.Text(), nullable=True),
-        sa.Column('reported_by', sa.String(), nullable=True),
-        sa.Column('status', sa.String(), nullable=True),
-        sa.PrimaryKeyConstraint('id'),
-        sa.ForeignKeyConstraint(['device_id'], ['devices.id'])
-    )
-    op.create_index(op.f('ix_device_fault_reports_id'), 'device_fault_reports', ['id'], unique=False)
     op.create_table('device_maintenance_logs',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('device_id', sa.Integer(), nullable=False),
@@ -61,6 +50,4 @@ def downgrade():
     op.drop_table('devices')
     op.drop_index(op.f('ix_device_maintenance_logs_id'), table_name='device_maintenance_logs')
     op.drop_table('device_maintenance_logs')
-    op.drop_index(op.f('ix_device_fault_reports_id'), table_name='device_fault_reports')
-    op.drop_table('device_fault_reports')
     # ### end Alembic commands ###

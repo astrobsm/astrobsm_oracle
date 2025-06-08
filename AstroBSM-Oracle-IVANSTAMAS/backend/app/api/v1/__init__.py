@@ -10,6 +10,12 @@ from .endpoints import reports
 from .endpoints.devices import router as devices_router
 from .endpoints.device_maintenance import router as device_maintenance_router
 from .endpoints import auth
+from .endpoints import production_console
+from .endpoints import production_output
+from .endpoints.hours_worked import router as hours_worked_router
+from .endpoints.attendance import router as attendance_router
+from .endpoints.appraisal import router as appraisal_router
+from .endpoints.device_fault_report import router as device_fault_report_router
 # Add other endpoint imports as needed
 
 api_router.include_router(payroll_router, tags=["payroll"])
@@ -33,4 +39,10 @@ api_router.include_router(reports.router, tags=["Reports"])
 api_router.include_router(devices_router, prefix="/devices", tags=["Devices"])
 api_router.include_router(device_maintenance_router, prefix="/device-maintenance", tags=["Device Maintenance"])
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
+api_router.include_router(production_console.router, prefix="/production-console", tags=["Production Console"])
+api_router.include_router(production_output.router, prefix="/production-output", tags=["Production Output"])
+api_router.include_router(hours_worked_router, tags=["Hours Worked"])
+api_router.include_router(attendance_router, prefix="/attendance", tags=["Attendance"])
+api_router.include_router(appraisal_router, prefix="/appraisal", tags=["Appraisal"])
+api_router.include_router(device_fault_report_router, prefix="/device-fault-reporting", tags=["Device Fault Reporting"])
 # Include other routers as needed

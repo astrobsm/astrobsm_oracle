@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
-from app.db.models.device import DeviceMaintenanceLog, DeviceFaultReport
+from app.db.models.device import DeviceMaintenanceLog
+from app.db.models.device_fault_report import DeviceFaultReport
 from app.schemas.device import DeviceMaintenanceLog, DeviceMaintenanceLogCreate, DeviceFaultReport, DeviceFaultReportCreate
 from typing import List
 

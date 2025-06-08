@@ -14,6 +14,7 @@ class Product(Base):
     reorder_point = Column(Integer, nullable=False)
     opening_stock_quantity = Column(Integer, nullable=False)
     average_production_time = Column(Float, nullable=False)
+    status = Column(String, nullable=False, default="Green")
 
     inventory_items = relationship("Inventory", back_populates="product")
     production_outputs = relationship("ProductionOutput", back_populates="product")

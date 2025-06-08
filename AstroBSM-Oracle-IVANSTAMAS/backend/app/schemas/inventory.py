@@ -142,3 +142,26 @@ class MarketerCreate(BaseModel):
     name: str
     email: EmailStr
     # …any other fields…
+
+class ProductionMaterialRequirement(BaseModel):
+    raw_material_id: int
+    raw_material_name: str
+    quantity_needed: int
+
+class ProductionCalculationRequest(BaseModel):
+    product_id: int
+    quantity: int
+
+class ProductionCalculationResponse(BaseModel):
+    product_id: int
+    quantity: int
+    materials: list[ProductionMaterialRequirement]
+
+class ProductionApprovalRequest(BaseModel):
+    product_id: int
+    quantity: int
+
+class ProductionApprovalResponse(BaseModel):
+    success: bool
+    message: str
+    updated_materials: list[ProductionMaterialRequirement]

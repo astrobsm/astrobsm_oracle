@@ -27,13 +27,3 @@ class DeviceMaintenanceLog(Base):
     performed_by = Column(String, nullable=True)
     remarks = Column(Text, nullable=True)
     device = relationship('Device', back_populates='maintenance_logs')
-
-class DeviceFaultReport(Base):
-    __tablename__ = 'device_fault_reports'
-    id = Column(Integer, primary_key=True, index=True)
-    device_id = Column(Integer, ForeignKey('devices.id'), nullable=False)
-    report_date = Column(DateTime, default=datetime.utcnow)
-    fault_description = Column(Text, nullable=True)
-    reported_by = Column(String, nullable=True)
-    status = Column(String, nullable=True)  # e.g., 'open', 'resolved'
-    device = relationship('Device', back_populates='fault_reports')
