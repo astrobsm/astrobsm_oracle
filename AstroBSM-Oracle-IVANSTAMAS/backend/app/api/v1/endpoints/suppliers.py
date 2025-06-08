@@ -13,7 +13,7 @@ def get_suppliers(db: Session = Depends(get_db)):
             "id": s.id,
             "name": s.name,
             "supplier_id": s.supplier_id,
-            "phone_number": s.phone_number,
+            "phone": s.phone_number,  # Use 'phone' for consistency
             "address": s.address
         }
         for s in suppliers
@@ -27,7 +27,7 @@ def get_suppliers_no_slash(db: Session = Depends(get_db)):
             "id": s.id,
             "name": s.name,
             "supplier_id": s.supplier_id,
-            "phone_number": s.phone_number,
+            "phone": s.phone_number,  # Use 'phone' for consistency
             "address": s.address
         }
         for s in suppliers

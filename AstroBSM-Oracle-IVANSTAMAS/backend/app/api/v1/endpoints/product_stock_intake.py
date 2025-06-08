@@ -70,3 +70,7 @@ def product_stock_intake(payload: dict, db: Session = Depends(get_db)):
         db.rollback()
         logging.error(f"[STOCK INTAKE] Failed to record product stock intake: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to record product stock intake: {e}")
+
+@router.post("", summary="Record product stock intake (no trailing slash)")
+def product_stock_intake_no_slash(payload: dict, db: Session = Depends(get_db)):
+    return product_stock_intake(payload, db)

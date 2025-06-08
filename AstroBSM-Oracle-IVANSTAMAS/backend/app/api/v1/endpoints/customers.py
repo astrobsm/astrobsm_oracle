@@ -15,7 +15,7 @@ def get_customers(db: Session = Depends(get_db)):
                 "id": c.id,
                 "name": c.name,
                 "customer_id": c.customer_id,
-                "phone": c.phone,
+                "phone": c.phone,  # Ensure phone number is included
                 "address": c.address,
                 "company": c.company
             }

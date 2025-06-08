@@ -47,6 +47,11 @@ def create_production_requirement(data: ProductionRequirementCreateSchema, db: S
         requirements=[ProductionRequirementItemSchema(rawMaterialId=i.raw_material_id, quantity=i.quantity) for i in items]
     )
 
+# Accept POST to /production-requirements (no trailing slash)
+@router.post("", response_model=ProductionRequirementResponseSchema, include_in_schema=False)
+def create_production_requirement_no_slash(data: ProductionRequirementCreateSchema, db: Session = Depends(get_db)):
+    return create_production_requirement(data, db)
+
 @router.get("/{req_id}", response_model=ProductionRequirementResponseSchema)
 def get_production_requirement(req_id: int, db: Session = Depends(get_db)):
     pr = db.query(ProductionRequirement).filter(ProductionRequirement.id == req_id).first()
