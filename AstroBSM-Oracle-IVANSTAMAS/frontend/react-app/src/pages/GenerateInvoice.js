@@ -73,13 +73,18 @@ const GenerateInvoice = () => {
             unit: 'mm',
             format: [58, 150] // 58mm width for POS/thermal printer
         });
-        // Add logo (centered at top)
+        // Add logo (centered at top) using data URL for reliability
         try {
-            const logoImg = new Image();
-            logoImg.src = LOGO_URL;
-            await new Promise((resolve) => { logoImg.onload = resolve; });
-            // Center logo (max width 30mm, keep aspect ratio)
-            doc.addImage(logoImg, 'PNG', 14, 4, 30, 12, undefined, 'FAST');
+            // Fetch the logo as a blob and convert to data URL
+            const response = await fetch(LOGO_URL);
+            const blob = await response.blob();
+            const reader = new window.FileReader();
+            const dataUrlPromise = new Promise((resolve) => {
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+            const logoDataUrl = await dataUrlPromise;
+            doc.addImage(logoDataUrl, 'PNG', 14, 4, 30, 12, undefined, 'FAST');
         } catch (e) {
             // If logo fails, just skip
         }
