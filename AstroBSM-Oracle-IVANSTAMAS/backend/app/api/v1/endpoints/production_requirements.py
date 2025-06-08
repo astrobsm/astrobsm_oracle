@@ -77,6 +77,10 @@ def list_production_requirements(db: Session = Depends(get_db)):
         ))
     return result
 
+@router.get("", response_model=List[ProductionRequirementResponseSchema], include_in_schema=False)
+def list_production_requirements_no_slash(db: Session = Depends(get_db)):
+    return list_production_requirements(db)
+
 @router.put("/{req_id}", response_model=ProductionRequirementResponseSchema)
 def update_production_requirement(req_id: int, data: ProductionRequirementCreateSchema, db: Session = Depends(get_db)):
     pr = db.query(ProductionRequirement).filter(ProductionRequirement.id == req_id).first()
