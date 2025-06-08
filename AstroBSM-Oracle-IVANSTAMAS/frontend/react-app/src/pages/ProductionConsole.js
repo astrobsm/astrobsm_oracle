@@ -26,39 +26,42 @@ const ProductionConsole = () => {
     }, []);
 
     const calculateMaterials = async () => {
+        if (!selectedProduct || !quantityToProduce) return;
         try {
-            const response = await fetch(`${API_BASE_URL}/production-requirements/${selectedProduct}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch production requirements');
-            }
-            const requirements = await response.json();
-            const calculatedMaterials = requirements.map((req) => ({
-                rawMaterial: req.rawMaterial,
-                quantityNeeded: req.quantity_per_unit * quantityToProduce
-            }));
-            setRequiredMaterials(calculatedMaterials);
+            const response = await fetch(`${API_BASE_URL}/production-console/calculate-materials`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product_id: Number(selectedProduct), quantity: Number(quantityToProduce) })
+            });
+            if (!response.ok) throw new Error('Failed to calculate materials');
+            const data = await response.json();
+            setRequiredMaterials(data.materials || []);
         } catch (error) {
+            setRequiredMaterials([]);
             console.error('Error calculating materials:', error);
         }
     };
 
+    useEffect(() => {
+        if (selectedProduct && quantityToProduce > 0) {
+            calculateMaterials();
+        } else {
+            setRequiredMaterials([]);
+        }
+    }, [selectedProduct, quantityToProduce]);
+
     const handleApproveAndExport = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/approve-production`, {
+            const response = await fetch(`${API_BASE_URL}/production-console/approve-production`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId: selectedProduct, quantity: quantityToProduce })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product_id: Number(selectedProduct), quantity: Number(quantityToProduce) })
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to approve production');
-            }
-
-            alert('Production approved and exported as PDF!');
+            if (!response.ok) throw new Error('Failed to approve production');
+            const data = await response.json();
+            alert(data.message || 'Production approved and stock updated!');
+            setRequiredMaterials([]);
         } catch (error) {
-            console.error('Error approving production:', error);
             alert('Failed to approve production. Please try again.');
         }
     };
@@ -90,12 +93,23 @@ const ProductionConsole = () => {
             {requiredMaterials.length > 0 && (
                 <div className="required-materials">
                     <h2>Required Materials</h2>
-                    <ul>
-                        {requiredMaterials.map((material, index) => (
-                            <li key={index}>{material.rawMaterial.name}: {material.quantityNeeded}</li>
-                        ))}
-                    </ul>
-                    <button onClick={handleApproveAndExport}>Approve and Export as PDF</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Raw Material</th>
+                                <th>Quantity Needed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {requiredMaterials.map((material, index) => (
+                                <tr key={index}>
+                                    <td>{material.raw_material_name}</td>
+                                    <td>{material.quantity_needed}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <button onClick={handleApproveAndExport}>Approve and Deduct Stock</button>
                 </div>
             )}
         </div>
