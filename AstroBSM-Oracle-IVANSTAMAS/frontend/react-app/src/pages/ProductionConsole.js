@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ProductionConsole.css';
-
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+import API_BASE_URL from '../config';
 
 const ProductionConsole = () => {
     const [products, setProducts] = useState([]);
@@ -12,7 +11,7 @@ const ProductionConsole = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/products`);
+                const response = await fetch(`${API_BASE_URL}/api/v1/products/`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
                 }
