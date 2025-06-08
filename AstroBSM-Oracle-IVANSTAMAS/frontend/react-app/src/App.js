@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Sidebar from './components/Sidebar';
@@ -54,6 +54,7 @@ import AdminInventory from './pages/AdminInventory';
 import AdminReports from './pages/AdminReports';
 import AdminSettings from './pages/AdminSettings';
 import AdminUserApprovals from './pages/AdminUserApprovals';
+import DeviceFaultReport from './pages/DeviceFaultReport';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -138,6 +139,7 @@ const App = () => {
                     <Route path="/admin/settings" element={<AdminSettings />} />
                     <Route path="/admin/user-approvals" element={<AdminUserApprovals />} />
                     <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                    <Route path="/device-fault-report" element={<DeviceFaultReport />} />
                     <Route path="*" element={<div>Route not found: {window.location.pathname}</div>} />
                 </Routes>
             </div>

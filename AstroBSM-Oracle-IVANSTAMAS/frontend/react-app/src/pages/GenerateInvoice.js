@@ -74,8 +74,8 @@ const GenerateInvoice = () => {
             format: [58, 150] // 58mm width for POS/thermal printer
         });
         // Add logo (centered at top) using data URL for reliability
+        let logoDataUrl = null;
         try {
-            // Fetch the logo as a blob and convert to data URL
             const response = await fetch(LOGO_URL);
             const blob = await response.blob();
             const reader = new window.FileReader();
@@ -83,7 +83,7 @@ const GenerateInvoice = () => {
                 reader.onloadend = () => resolve(reader.result);
                 reader.readAsDataURL(blob);
             });
-            const logoDataUrl = await dataUrlPromise;
+            logoDataUrl = await dataUrlPromise;
             doc.addImage(logoDataUrl, 'PNG', 14, 4, 30, 12, undefined, 'FAST');
         } catch (e) {
             // If logo fails, just skip
@@ -106,6 +106,11 @@ const GenerateInvoice = () => {
         doc.text(`Customer: ${customers.find(c => c.id === parseInt(selectedCustomer))?.name || ''}`, 4, y);
         doc.text(`Date: ${new Date().toLocaleDateString()}`, 38, y);
         y += 4;
+        // Separator line
+        doc.setDrawColor(150);
+        doc.setLineWidth(0.3);
+        doc.line(2, y, 56, y);
+        y += 2;
         const tableData = selectedProducts.map((item, idx) => [
             idx + 1,
             item.product?.name?.slice(0, 12) || '',
@@ -126,24 +131,34 @@ const GenerateInvoice = () => {
         });
         let finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : y + tableData.length * 4;
         finalY += 2;
+        // Subtotal and VAT
         doc.setFontSize(8);
         doc.text(`Subtotal: ₦${subtotal.toFixed(2)}`, 4, finalY);
         doc.text(`VAT (${vat}%): ₦${vatAmount.toFixed(2)}`, 4, finalY + 4);
-        doc.text(`Total: ₦${totalAmount.toFixed(2)}`, 4, finalY + 8);
+        // Bold and centered total
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'bold');
+        doc.text(`TOTAL: ₦${totalAmount.toFixed(2)}`, 29, finalY + 10, { align: 'center' });
+        doc.setFont(undefined, 'normal');
+        // Separator line before paid
+        doc.setDrawColor(150);
+        doc.setLineWidth(0.3);
+        doc.line(2, finalY + 12, 56, finalY + 12);
         if (status === 'paid') {
             doc.setFontSize(10);
             doc.setTextColor(0, 128, 0);
-            doc.text('PAID', 29, finalY + 14, { align: 'center' });
+            doc.text('PAID', 29, finalY + 17, { align: 'center' });
             doc.setTextColor(0, 0, 0);
         }
         setPdfDoc(doc);
         setPdfType(status === 'paid' ? 'receipt' : 'invoice');
         setShowDownload(true);
+        // Return logoDataUrl for backend usage
+        return logoDataUrl;
     };
 
     // Helper to save invoice to backend
-    const saveInvoiceToBackend = async (status) => {
-        // Generate a simple invoice number (e.g., INV-YYYYMMDD-HHMMSS)
+    const saveInvoiceToBackend = async (status, logoDataUrl = null) => {
         const now = new Date();
         const invoiceNumber = `INV-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${now.getHours()}${now.getMinutes()}${now.getSeconds()}`;
         // Prepare invoice payload
@@ -158,7 +173,9 @@ const GenerateInvoice = () => {
                 quantity: item.quantity,
                 price: item.product?.unit_price
             })),
-            date: now.toISOString().split('T')[0] // Add date in YYYY-MM-DD format
+            date: now.toISOString().split('T')[0],
+            logo_url: logoDataUrl || LOGO_URL,
+            pdf_url: null // Optionally, set this if you upload the PDF somewhere
         };
         try {
             const response = await fetch(`${API_BASE_URL}/invoices`, {
@@ -176,8 +193,8 @@ const GenerateInvoice = () => {
     };
 
     const handleSubmit = async (status) => {
-        await saveInvoiceToBackend(status);
-        generateInvoicePDF(status);
+        const logoDataUrl = await generateInvoicePDF(status);
+        await saveInvoiceToBackend(status, logoDataUrl);
     };
 
     const handleDownload = () => {

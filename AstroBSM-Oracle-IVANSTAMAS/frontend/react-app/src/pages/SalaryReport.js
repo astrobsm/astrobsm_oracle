@@ -1,59 +1,56 @@
 import React, { useEffect, useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import API_BASE_URL from '../config';
 import './SalaryReport.css';
 
+const columns = [
+  { field: 'id', headerName: 'Payslip ID', flex: 0.7 },
+  { field: 'employee_id', headerName: 'Staff ID', flex: 1 },
+  { field: 'salary', headerName: 'Salary', flex: 1 },
+  { field: 'bonus', headerName: 'Bonus', flex: 1 },
+  { field: 'deductions', headerName: 'Deductions', flex: 1 },
+  { field: 'net_pay', headerName: 'Net Pay', flex: 1 },
+  { field: 'period', headerName: 'Period', flex: 1 },
+];
+
 const SalaryReport = () => {
-    const [report, setReport] = useState(null);
-    const [error, setError] = useState(null);
+  const [payslips, setPayslips] = useState([]);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchSalaryReport = async () => {
-            try {
-                const response = await fetch(`${API_BASE_URL}/salary-report`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch salary report');
-                }
-                const data = await response.json();
-                setReport(data);
-            } catch (err) {
-                setError(err.message);
-            }
-        };
+  useEffect(() => {
+    const fetchPayslips = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/payroll`);
+        if (!response.ok) throw new Error('Failed to fetch payslips');
+        const data = await response.json();
+        setPayslips(Array.isArray(data) ? data.map((p, i) => ({ ...p, id: p.id || i })) : []);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    fetchPayslips();
+  }, []);
 
-        fetchSalaryReport();
-    }, []);
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
 
-    if (error) {
-        return <div className="error">Error: {error}</div>;
-    }
-
-    if (!report) {
-        return <div>Loading...</div>;
-    }
-
-    return (
-        <div className="salary-report-container">
-            <h1>Salary Report</h1>
-            <table className="salary-report-table">
-                <thead>
-                    <tr>
-                        <th>Total Salary</th>
-                        <th>Total Bonus</th>
-                        <th>Total Deductions</th>
-                        <th>Total Net Salary</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{report.total_salary}</td>
-                        <td>{report.total_bonus}</td>
-                        <td>{report.total_deductions}</td>
-                        <td>{report.total_net_salary}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    );
+  return (
+    <Box className="salary-report-container" sx={{ height: 600, width: '100%' }}>
+      <Typography variant="h4" gutterBottom>Salary Report (Payslips)</Typography>
+      <DataGrid
+        rows={payslips}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[10, 20, 50]}
+        checkboxSelection
+        disableRowSelectionOnClick
+        sx={{ background: '#fff', borderRadius: 2, boxShadow: 2 }}
+      />
+    </Box>
+  );
 };
 
 export default SalaryReport;

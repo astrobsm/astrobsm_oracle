@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './DeviceIntake.css';
 import API_BASE_URL from '../config';
 
+// Helper to generate ASTROxxxx device ID
+function generateAstroId() {
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    return `ASTRO${randomNum}`;
+}
+
 const DeviceIntake = () => {
     const [deviceData, setDeviceData] = useState({
         deviceName: '',
@@ -46,6 +52,13 @@ const DeviceIntake = () => {
         fetchProducts();
     }, []);
 
+    useEffect(() => {
+        if (deviceData.deviceName) {
+            setDeviceData((prev) => ({ ...prev, serialNumber: generateAstroId() }));
+        }
+        // eslint-disable-next-line
+    }, [deviceData.deviceName]);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setDeviceData({ ...deviceData, [name]: value });
@@ -54,13 +67,19 @@ const DeviceIntake = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${API_BASE_URL}/device-intake`, {
+            const response = await fetch(`${API_BASE_URL}/devices`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(deviceData),
+                body: JSON.stringify({
+                    name: deviceData.deviceName,
+                    serial_number: deviceData.serialNumber,
+                    // Add other fields as needed for your Device model
+                    // e.g., model, manufacturer, purchase_date, location, status, notes
+                }),
             });
+            if (!response.ok) throw new Error('Failed to submit device');
             const data = await response.json();
             alert(data.message || 'Device intake recorded successfully!');
         } catch (error) {
@@ -83,7 +102,7 @@ const DeviceIntake = () => {
                     />
                 </label>
                 <label>
-                    Serial Number (Auto-generated):
+                    Device ID (Auto-generated):
                     <input
                         type="text"
                         name="serialNumber"

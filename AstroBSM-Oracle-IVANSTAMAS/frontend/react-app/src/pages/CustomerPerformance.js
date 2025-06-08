@@ -1,62 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import './CustomerPerformance.css';
+import { DataGrid } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import API_BASE_URL from '../config';
+import './CustomerPerformance.css';
+
+const columns = [
+  { field: 'name', headerName: 'Customer Name', flex: 1 },
+  { field: 'totalTransactions', headerName: 'Total Transactions', flex: 1 },
+  { field: 'totalAmount', headerName: 'Total Amount', flex: 1 },
+  { field: 'feedback', headerName: 'Feedback', flex: 2 },
+];
+
+const getFeedbackMessage = (totalAmount) => {
+  if (totalAmount > 10000) {
+    return 'Thank you for being a top customer! We appreciate your loyalty.';
+  } else if (totalAmount > 5000) {
+    return 'We value your patronage! Keep shopping with us.';
+  } else {
+    return 'Thank you for your business! We look forward to serving you again.';
+  }
+};
 
 const CustomerPerformance = () => {
-    const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
-    useEffect(() => {
-        const fetchCustomerPerformance = async () => {
-            try {
-                const response = await fetch(`${API_BASE_URL}/customer-performance`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setCustomers(data);
-            } catch (error) {
-                console.error('Error fetching customer performance:', error);
-            }
-        };
-
-        fetchCustomerPerformance();
-    }, []);
-
-    const getFeedbackMessage = (totalAmount) => {
-        if (totalAmount > 10000) {
-            return 'Thank you for being a top customer! We appreciate your loyalty.';
-        } else if (totalAmount > 5000) {
-            return 'We value your patronage! Keep shopping with us.';
-        } else {
-            return 'Thank you for your business! We look forward to serving you again.';
-        }
+  useEffect(() => {
+    const fetchCustomerPerformance = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/customer-performance`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        setCustomers(Array.isArray(data) ? data.map(c => ({ ...c, feedback: getFeedbackMessage(c.totalAmount), id: c.id })) : []);
+      } catch (error) {
+        setCustomers([]);
+      }
     };
+    fetchCustomerPerformance();
+  }, []);
 
-    return (
-        <div className="customer-performance-container">
-            <h1>Customer Performance</h1>
-            <table className="customer-performance-table">
-                <thead>
-                    <tr>
-                        <th>Customer Name</th>
-                        <th>Total Transactions</th>
-                        <th>Total Amount</th>
-                        <th>Feedback</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {customers.map((customer) => (
-                        <tr key={customer.id}>
-                            <td>{customer.name}</td>
-                            <td>{customer.totalTransactions}</td>
-                            <td>{customer.totalAmount}</td>
-                            <td>{getFeedbackMessage(customer.totalAmount)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+  return (
+    <Box className="customer-performance-container" sx={{ height: 600, width: '100%' }}>
+      <Typography variant="h4" gutterBottom>Customer Performance</Typography>
+      <DataGrid
+        rows={customers}
+        columns={columns}
+        pageSize={10}
+        rowsPerPageOptions={[10, 20, 50]}
+        checkboxSelection
+        disableRowSelectionOnClick
+        sx={{ background: '#fff', borderRadius: 2, boxShadow: 2 }}
+      />
+    </Box>
+  );
 };
 
 export default CustomerPerformance;

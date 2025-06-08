@@ -34,13 +34,20 @@ const DeviceMaintenanceLog = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${API_BASE_URL}/maintenance-logs`, {
+            const response = await fetch(`${API_BASE_URL}/device-maintenance/maintenance-logs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    device_id: formData.deviceId,
+                    maintenance_date: formData.date,
+                    performed_by: formData.technicianName,
+                    description: formData.findings,
+                    remarks: '',
+                }),
             });
+            if (!response.ok) throw new Error('Failed to submit maintenance log');
             const data = await response.json();
             alert(data.message || 'Maintenance log recorded successfully!');
         } catch (error) {
@@ -62,7 +69,7 @@ const DeviceMaintenanceLog = () => {
                     >
                         <option value="">-- Select a Device --</option>
                         {devices.map((device) => (
-                            <option key={device.id} value={device.id}>{device.deviceName}</option>
+                            <option key={device.id} value={device.id}>{device.name || device.serial_number}</option>
                         ))}
                     </select>
                 </label>

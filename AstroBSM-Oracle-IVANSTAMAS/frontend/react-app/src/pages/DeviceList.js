@@ -1,33 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import './DeviceList.css';
 import API_BASE_URL from '../config';
+import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
 
 const DeviceList = () => {
     const [devices, setDevices] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchDevices = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/products`);
+                const response = await fetch(`${API_BASE_URL}/devices`);
+                if (!response.ok) throw new Error('Failed to fetch devices');
                 const data = await response.json();
-                setDevices(data);
+                setDevices(Array.isArray(data) ? data : []);
             } catch (error) {
-                console.error('Error fetching devices:', error);
+                setError('Error fetching devices');
+            } finally {
+                setLoading(false);
             }
         };
-
         fetchDevices();
     }, []);
+
+    if (loading) return <div>Loading devices...</div>;
+    if (error) return <div className="error">{error}</div>;
 
     return (
         <div className="device-list-container">
             <h1>Device List</h1>
-            <button className="awesome-button">View All Devices</button>
-            <ul>
+            <Grid container spacing={2}>
                 {devices.map(device => (
-                    <li key={device.id}>{device.name}</li>
+                    <Grid item xs={12} sm={6} md={4} key={device.id}>
+                        <Card className="device-card" variant="outlined">
+                            <CardContent>
+                                <Typography variant="h6">{device.name}</Typography>
+                                <Typography variant="body2">ID: {device.id}</Typography>
+                                <Typography variant="body2">Serial: {device.serial_number}</Typography>
+                                <Typography variant="body2">Model: {device.model || 'N/A'}</Typography>
+                                <Typography variant="body2">Manufacturer: {device.manufacturer || 'N/A'}</Typography>
+                                <Typography variant="body2">Status: {device.status || 'N/A'}</Typography>
+                                <Typography variant="body2">Location: {device.location || 'N/A'}</Typography>
+                                <Typography variant="body2">Notes: {device.notes || 'N/A'}</Typography>
+                                <Button variant="contained" color="primary" style={{marginTop:8}}>View Details</Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 ))}
-            </ul>
+            </Grid>
         </div>
     );
 };
