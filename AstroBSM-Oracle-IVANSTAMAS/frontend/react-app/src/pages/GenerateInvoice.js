@@ -211,6 +211,7 @@ const GenerateInvoice = () => {
 
     return (
         <div className="generate-invoice-container">
+            <img src={LOGO_URL} alt="Company Logo" style={{ display: 'block', margin: '0 auto 10px', maxWidth: 100, maxHeight: 60 }} />
             <h1>Generate Invoice</h1>
             <div className="company-details">
                 <h2>Bonnesante Medicals</h2>
