@@ -53,28 +53,58 @@ const TimedAttendance = () => {
         setSelectedStaff(e.target.value);
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage("");
+        if (!selectedStaff) {
+            setMessage("Please select a staff member.");
+            return;
+        }
+        try {
+            const res = await fetch(`${API_BASE_URL}/attendance`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    staff_id: selectedStaff,
+                    action: action === 'time-in' ? 'IN' : 'OUT'
+                })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setMessage(`Attendance ${action === 'time-in' ? 'Time-In' : 'Time-Out'} recorded successfully.`);
+            } else {
+                setMessage(data.detail || 'Error recording attendance.');
+            }
+        } catch (err) {
+            setMessage('Network error.');
+        }
+    };
+
     return (
         <div className="timed-attendance-container">
             <h1>Timed Attendance</h1>
-            <label>
-                Select Staff:
-                <select value={selectedStaff} onChange={handleStaffChange}>
-                    <option value="">-- Select Staff --</option>
-                    {staffList.length === 0 && <option disabled>No staff found</option>}
-                    {staffList.map((staff) => (
-                        <option key={staff.id} value={staff.id}>
-                            {staff.name} ({staff.staff_id})
-                        </option>
-                    ))}
-                </select>
-            </label>
-            <label>
-                Select Action:
-                <select value={action} onChange={(e) => setAction(e.target.value)}>
-                    <option value="time-in">Time-In</option>
-                    <option value="time-out">Time-Out</option>
-                </select>
-            </label>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Select Staff:
+                    <select value={selectedStaff} onChange={handleStaffChange} required>
+                        <option value="">-- Select Staff --</option>
+                        {staffList.length === 0 && <option disabled>No staff found</option>}
+                        {staffList.map((staff) => (
+                            <option key={staff.id} value={staff.id}>
+                                {staff.name} ({staff.staff_id})
+                            </option>
+                        ))}
+                    </select>
+                </label>
+                <label>
+                    Select Action:
+                    <select value={action} onChange={(e) => setAction(e.target.value)} required>
+                        <option value="time-in">Time-In</option>
+                        <option value="time-out">Time-Out</option>
+                    </select>
+                </label>
+                <button type="submit" className="submit-btn">Submit</button>
+            </form>
             <div className="attendance-buttons">
                 <button onClick={handleScanQRCode}>Scan QR Code</button>
                 <button onClick={handleFacialScan}>Facial Scan</button>
