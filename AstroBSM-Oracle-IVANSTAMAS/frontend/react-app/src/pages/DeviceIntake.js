@@ -60,8 +60,14 @@ const DeviceIntake = () => {
     }, [deviceData.deviceName]);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setDeviceData({ ...deviceData, [name]: value });
+        const { name, value, type, multiple, options } = e.target;
+        if (name === 'functions' && multiple) {
+            // Handle multiple select for functions
+            const selected = Array.from(options).filter(o => o.selected).map(o => o.value);
+            setDeviceData({ ...deviceData, functions: selected });
+        } else {
+            setDeviceData({ ...deviceData, [name]: value });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -75,8 +81,13 @@ const DeviceIntake = () => {
                 body: JSON.stringify({
                     name: deviceData.deviceName,
                     serial_number: deviceData.serialNumber,
-                    // Add other fields as needed for your Device model
-                    // e.g., model, manufacturer, purchase_date, location, status, notes
+                    quantity: deviceData.quantity,
+                    functions: deviceData.functions,
+                    date_of_intake: deviceData.dateOfIntake,
+                    cost: deviceData.cost,
+                    staff_id: deviceData.staffId,
+                    useful_life: deviceData.usefulLife,
+                    depreciation_rate: deviceData.depreciationRate
                 }),
             });
             if (!response.ok) throw new Error('Failed to submit device');

@@ -92,6 +92,28 @@ const Settings = () => {
         alert(`Font changed to ${font} successfully!`);
     };
 
+    const handleApplyChanges = async () => {
+        if (!selectedPage) {
+            alert('Please select a page to apply settings.');
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:8000/api/v1/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    page_name: selectedPage,
+                    background_image: uploadedImage,
+                    font_family: selectedFont,
+                }),
+            });
+            const data = await response.json();
+            alert(data.message || 'Settings applied successfully!');
+        } catch (error) {
+            alert('Error applying settings.');
+        }
+    };
+
     return (
         <div className="settings-container">
             <h1>Settings</h1>
@@ -129,6 +151,7 @@ const Settings = () => {
                         <option value="'Verdana', sans-serif">Verdana</option>
                     </select>
                 </div>
+                <button onClick={handleApplyChanges} style={{marginTop: 16, background: '#1976d2', color: 'white', padding: '8px 24px', border: 'none', borderRadius: 4, fontWeight: 'bold'}}>Apply Changes</button>
             </div>
         </div>
     );

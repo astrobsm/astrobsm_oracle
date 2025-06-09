@@ -43,6 +43,7 @@ const StaffPerformance = () => {
         rowsPerPageOptions={[10, 20, 50]}
         checkboxSelection
         disableRowSelectionOnClick
+        sortingOrder={['desc', 'asc']}
         sx={{ background: '#fff', borderRadius: 2, boxShadow: 2 }}
       />
     </Box>
