@@ -5,13 +5,22 @@ from app.db.models.inventory import Product, Inventory
 from app.db.models.product_stock_intake import ProductStockIntake
 from app.db.models.staff import Staff
 from app.db.models.warehouse import Warehouse
+from app.db.models.user_access import UserWarehouseAccess
+from app.api.v1.endpoints.auth import get_current_user
 from datetime import datetime
 import logging
 
 router = APIRouter()
 
 @router.post("/", summary="Record product stock intake")
-def product_stock_intake(payload: dict, db: Session = Depends(get_db)):
+def product_stock_intake(payload: dict, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    # Enforce warehouse access
+    warehouse_id = payload.get("warehouseId")
+    if not warehouse_id:
+        raise HTTPException(status_code=400, detail="Warehouse is required")
+    access = db.query(UserWarehouseAccess).filter_by(user_id=current_user.id, warehouse_id=warehouse_id).first()
+    if not access:
+        raise HTTPException(status_code=403, detail="You do not have access to this warehouse.")
     try:
         logging.warning(f"[STOCK INTAKE] Received payload: {payload}")
         product_id = int(payload.get("productId"))
@@ -20,8 +29,7 @@ def product_stock_intake(payload: dict, db: Session = Depends(get_db)):
         expiry_date = payload.get("expiryDate")
         expiry_date = datetime.strptime(expiry_date, "%Y-%m-%d").date() if expiry_date else None
         staff_id = int(payload.get("staffId"))
-        warehouse_id = payload.get("warehouseId")
-        warehouse_id = int(warehouse_id) if warehouse_id else None
+        warehouse_id = int(warehouse_id)
 
         logging.warning(f"[STOCK INTAKE] Parsed IDs: product_id={product_id}, staff_id={staff_id}, warehouse_id={warehouse_id}")
 

@@ -31,3 +31,7 @@ def get_customer_performance(db: Session = Depends(get_db)):
             'totalAmount': float(r.totalAmount)
         } for r in results
     ]
+
+@router.get("", response_model=List[dict], include_in_schema=False)
+def get_customer_performance_no_slash(db: Session = Depends(get_db)):
+    return get_customer_performance(db)

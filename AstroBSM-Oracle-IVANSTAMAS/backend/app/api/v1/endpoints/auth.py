@@ -1,12 +1,32 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.schemas.auth import UserCreate, UserResponse, ProfileCreate  # Import the missing schema
-from app.services.auth_service import create_user, authenticate_user, create_user_profile  # Import the missing function
+from app.services.auth_service import (
+    create_user,
+    authenticate_user,
+    create_user_profile,
+    get_current_user as service_get_current_user,
+)  # Import the missing function
 from app.core.security import create_access_token, get_password_hash
 from app.db.models.user import User
+from app.utils.pdf_utils import generate_credentials_pdf
+import random
+import string
+from fastapi.responses import Response
+from fastapi.security import OAuth2PasswordBearer
 
 router = APIRouter()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+
+
+def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    user = service_get_current_user(db, token)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
+    return user
+
 
 @router.post("/register", response_model=UserResponse)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -16,6 +36,7 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user.status = "pending"  # Set status to pending for new users
     db.commit()
     return db_user
+
 
 @router.post("/login")
 def login(user: UserCreate, db: Session = Depends(get_db)):
@@ -33,6 +54,7 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
     access_token = create_access_token(data={"sub": db_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
+
 @router.get("/user/{user_id}")
 def get_user_data(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
@@ -43,8 +65,9 @@ def get_user_data(user_id: int, db: Session = Depends(get_db)):
         "username": user.username,
         "role": user.role,
         "facial_scan_data": user.facial_scan_data,
-        "qr_code": user.qr_code
+        "qr_code": user.qr_code,
     }
+
 
 @router.get("/pending-users")
 def get_pending_users(db: Session = Depends(get_db)):
@@ -57,19 +80,34 @@ def get_pending_users(db: Session = Depends(get_db)):
             "email": getattr(u, "email", None),
             "phone": getattr(u, "phone", None),
             "role": u.role,
-            "status": u.status
+            "status": u.status,
         }
         for u in users
     ]
+
 
 @router.post("/approve-user/{user_id}")
 def approve_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    # Generate unique 6-letter username and 4-digit password
+    username = "".join(random.choices(string.ascii_lowercase, k=6))
+    password = "".join(random.choices(string.digits, k=4))
+    from app.core.security import get_password_hash
+
+    user.username = username
+    user.hashed_password = get_password_hash(password)
     user.status = "active"
     db.commit()
-    return {"message": "User approved"}
+    # Generate PDF
+    pdf_bytes = generate_credentials_pdf(username, password, user.role)
+    return Response(
+        pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=credentials_user_{user.id}.pdf"},
+    )
+
 
 @router.post("/create-profile")
 def create_profile(profile: ProfileCreate, db: Session = Depends(get_db)):
@@ -86,12 +124,13 @@ def create_profile(profile: ProfileCreate, db: Session = Depends(get_db)):
         hashed_password="",  # No password until approved
         role=profile.role,
         status="pending",
-        profile_completed=False
+        profile_completed=False,
     )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return {"message": "Profile created. Awaiting admin approval."}
+
 
 @router.post("/admin/create-admin")
 def create_admin_user_api(db: Session = Depends(get_db)):
@@ -106,11 +145,12 @@ def create_admin_user_api(db: Session = Depends(get_db)):
         username=username,
         hashed_password=get_password_hash(password),
         role=role,
-        status=status
+        status=status,
     )
     db.add(new_user)
     db.commit()
     return {"message": f"Admin user '{username}' created with password '{password}'."}
+
 
 @router.post("/admin/reset-admin")
 def reset_admin_user_api(db: Session = Depends(get_db)):
@@ -124,6 +164,7 @@ def reset_admin_user_api(db: Session = Depends(get_db)):
     db.commit()
     return {"message": f"Admin user '{username}' password reset and status set to active."}
 
+
 @router.get("/list-users")
 def list_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
@@ -134,7 +175,7 @@ def list_users(db: Session = Depends(get_db)):
             "role": u.role,
             "status": u.status,
             "email": getattr(u, "email", None),
-            "full_name": getattr(u, "full_name", None)
+            "full_name": getattr(u, "full_name", None),
         }
         for u in users
     ]

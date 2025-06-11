@@ -19,7 +19,8 @@ from .invoice import Invoice, InvoiceItem
 from .sales_summary import SalesSummary
 from .product_stock_intake import ProductStockIntake
 from .production_analysis import ProductionAnalysis
+from .user_access import UserWarehouseAccess, UserSectionAccess
 
 __all__ = [
-    "User", "Product", "RawMaterial", "RawMaterialStockIntake", "Inventory", "Payroll", "PayrollRecord", "Warehouse", "Supplier", "Distributor", "Staff", "Customer", "CustomerPerformance", "Marketer", "Settings", "ProductionRequirement", "ProductionRequirementItem", "ProductionOutput", "ProductionConsoleOutput", "DeviceIntake", "ExportTracking", "Invoice", "InvoiceItem", "SalesSummary", "ProductStockIntake", "ProductionAnalysis"
+    "User", "Product", "RawMaterial", "RawMaterialStockIntake", "Inventory", "Payroll", "PayrollRecord", "Warehouse", "Supplier", "Distributor", "Staff", "Customer", "CustomerPerformance", "Marketer", "Settings", "ProductionRequirement", "ProductionRequirementItem", "ProductionOutput", "ProductionConsoleOutput", "DeviceIntake", "ExportTracking", "Invoice", "InvoiceItem", "SalesSummary", "ProductStockIntake", "ProductionAnalysis", "UserWarehouseAccess", "UserSectionAccess"
 ]

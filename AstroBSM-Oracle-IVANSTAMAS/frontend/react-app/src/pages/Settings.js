@@ -7,6 +7,14 @@ const Settings = () => {
     const [uploadedImage, setUploadedImage] = useState(null);
     const [selectedFont, setSelectedFont] = useState('');
 
+    // Grant Access UI state
+    const [users, setUsers] = useState([]);
+    const [warehouses, setWarehouses] = useState([]);
+    const [selectedUser, setSelectedUser] = useState('');
+    const [userWarehouseAccess, setUserWarehouseAccess] = useState([]);
+    const [userSectionAccess, setUserSectionAccess] = useState([]);
+    const [showGrantAccess, setShowGrantAccess] = useState(false);
+
     const pages = [
         { path: '/dashboard', name: 'Dashboard' },
         { path: '/registration', name: 'Registration' },
@@ -45,6 +53,24 @@ const Settings = () => {
 
         fetchSettings();
     }, []);
+
+    // Fetch users and warehouses for Grant Access
+    useEffect(() => {
+        if (showGrantAccess) {
+            fetch('/api/v1/users').then(res => res.json()).then(setUsers);
+            fetch('/api/v1/warehouses').then(res => res.json()).then(setWarehouses);
+        }
+    }, [showGrantAccess]);
+
+    // Fetch access for selected user
+    useEffect(() => {
+        if (selectedUser) {
+            fetch(`/api/v1/access/user/${selectedUser}`).then(res => res.json()).then(data => {
+                setUserWarehouseAccess(data.warehouses || []);
+                setUserSectionAccess(data.sections || []);
+            });
+        }
+    }, [selectedUser]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -114,6 +140,28 @@ const Settings = () => {
         }
     };
 
+    const handleGrantWarehouse = async (warehouseId, grant) => {
+        await fetch('/api/v1/access/warehouse', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: selectedUser, warehouse_id: warehouseId, grant })
+        });
+        // Refresh
+        setUserWarehouseAccess(grant
+            ? [...userWarehouseAccess, warehouseId]
+            : userWarehouseAccess.filter(id => id !== warehouseId));
+    };
+    const handleGrantSection = async (section, grant) => {
+        await fetch('/api/v1/access/section', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: selectedUser, section_name: section, grant })
+        });
+        setUserSectionAccess(grant
+            ? [...userSectionAccess, section]
+            : userSectionAccess.filter(s => s !== section));
+    };
+
     return (
         <div className="settings-container">
             <h1>Settings</h1>
@@ -152,7 +200,34 @@ const Settings = () => {
                     </select>
                 </div>
                 <button onClick={handleApplyChanges} style={{marginTop: 16, background: '#1976d2', color: 'white', padding: '8px 24px', border: 'none', borderRadius: 4, fontWeight: 'bold'}}>Apply Changes</button>
+                <button onClick={() => setShowGrantAccess(true)} style={{marginTop: 16, background: '#388e3c', color: 'white', padding: '8px 24px', border: 'none', borderRadius: 4, fontWeight: 'bold'}}>Grant Access</button>
             </div>
+            {showGrantAccess && (
+                <div className="grant-access-modal">
+                    <h2>Grant Access</h2>
+                    <label>Select User:
+                        <select value={selectedUser} onChange={e => setSelectedUser(e.target.value)}>
+                            <option value="">--Select User--</option>
+                            {users.map(u => <option key={u.id} value={u.id}>{u.username}</option>)}
+                        </select>
+                    </label>
+                    <h3>Warehouses</h3>
+                    {warehouses.map(w => (
+                        <div key={w.id}>
+                            <input type="checkbox" checked={userWarehouseAccess.includes(w.id)} onChange={e => handleGrantWarehouse(w.id, e.target.checked)} />
+                            {w.name}
+                        </div>
+                    ))}
+                    <h3>Sections/Pages</h3>
+                    {pages.map(p => (
+                        <div key={p.path}>
+                            <input type="checkbox" checked={userSectionAccess.includes(p.path)} onChange={e => handleGrantSection(p.path, e.target.checked)} />
+                            {p.name}
+                        </div>
+                    ))}
+                    <button onClick={() => setShowGrantAccess(false)} style={{marginTop: 16}}>Close</button>
+                </div>
+            )}
         </div>
     );
 };

@@ -21,7 +21,9 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         hashed_password=get_password_hash(user.password),
         role=user.role,
         facial_scan_data=user.facial_scan_data,
-        qr_code=user.qr_code
+        qr_code=user.qr_code,
+        fingerprint_template=user.fingerprint_template,  # Store fingerprint template
+        status="pending"  # Ensure status is always pending for new users
     )
     db.add(new_user)
     db.commit()

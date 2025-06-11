@@ -61,7 +61,7 @@ def create_user(db: Session, username: str, password: str, role: str = "user") -
         User: The newly created user object.
     """
     hashed_password = get_password_hash(password)
-    new_user = User(username=username, hashed_password=hashed_password, role=role)
+    new_user = User(username=username, hashed_password=hashed_password, role=role, status="pending")
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

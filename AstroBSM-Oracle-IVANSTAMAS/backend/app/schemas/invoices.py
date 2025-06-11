@@ -18,6 +18,7 @@ class InvoiceItemCreate(BaseModel):
 
 class InvoiceCreate(InvoiceBase):
     items: List[InvoiceItemCreate]
+    warehouse_id: int  # NEW: warehouse selection required
 
 class InvoiceOut(InvoiceBase):
     id: int

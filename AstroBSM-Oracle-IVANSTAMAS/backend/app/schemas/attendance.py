@@ -3,7 +3,8 @@ from typing import Optional
 from datetime import date, datetime
 
 class AttendanceRecordCreate(BaseModel):
-    staff_id: int
+    fingerprint_data: Optional[str] = None  # For desktop (base64 string)
+    user_id: Optional[int] = None           # For mobile (WebAuthn)
     action: str  # 'IN' or 'OUT'
 
 class AttendanceRecordOut(BaseModel):

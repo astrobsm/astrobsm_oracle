@@ -32,7 +32,7 @@ const DeviceList = () => {
             <h1>Device List</h1>
             <Grid container spacing={2}>
                 {devices.map(device => (
-                    <Grid item xs={12} sm={6} md={4} key={device.id}>
+                    <Grid item xs={12} md={6} lg={4} key={device.id}>
                         <Card className="device-card" variant="outlined">
                             <CardContent>
                                 <Typography variant="h6">{device.name}</Typography>

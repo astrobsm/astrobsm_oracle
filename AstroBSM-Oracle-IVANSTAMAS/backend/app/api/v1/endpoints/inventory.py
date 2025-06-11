@@ -7,11 +7,17 @@ from app.services.inventory_service import get_all_products, get_all_raw_materia
 from app.db.session import get_db
 from typing import List
 from app.schemas import Product, RawMaterial, Warehouse
+from app.db.models.user_access import UserWarehouseAccess
+from app.api.v1.endpoints.auth import get_current_user
 
 router = APIRouter()
 
 @router.post("/intake", response_model=inventory_schemas.Inventory)
-def intake_product(product: inventory_schemas.InventoryCreate, db: Session = Depends(session.get_db)):
+def intake_product(product: inventory_schemas.InventoryCreate, db: Session = Depends(session.get_db), current_user=Depends(get_current_user)):
+    # Enforce warehouse access
+    access = db.query(UserWarehouseAccess).filter_by(user_id=current_user.id, warehouse_id=product.warehouse_id).first()
+    if not access:
+        raise HTTPException(status_code=403, detail="You do not have access to this warehouse.")
     return inventory_service.create_product_intake(db=db, product=product)
 
 @router.get("/stock-levels", response_model=list[inventory_schemas.Inventory])
@@ -19,17 +25,25 @@ def get_stock_levels(db: Session = Depends(session.get_db)):
     return inventory_service.get_stock_levels(db=db)
 
 @router.put("/update/{product_id}", response_model=inventory_schemas.Inventory)
-def update_product(product_id: int, product: inventory_schemas.InventoryUpdate, db: Session = Depends(session.get_db)):
+def update_product(product_id: int, product: inventory_schemas.InventoryUpdate, db: Session = Depends(session.get_db), current_user=Depends(get_current_user)):
+    # Enforce warehouse access
+    access = db.query(UserWarehouseAccess).filter_by(user_id=current_user.id, warehouse_id=product.warehouse_id).first()
+    if not access:
+        raise HTTPException(status_code=403, detail="You do not have access to this warehouse.")
     db_product = inventory_service.get_product(db=db, product_id=product_id)
     if not db_product:
         raise HTTPException(status_code=404, detail="Product not found")
     return inventory_service.update_product(db=db, product_id=product_id, product=product)
 
 @router.delete("/delete/{product_id}", response_model=dict)
-def delete_product(product_id: int, db: Session = Depends(session.get_db)):
+def delete_product(product_id: int, db: Session = Depends(session.get_db), current_user=Depends(get_current_user)):
+    # Enforce warehouse access (assume product has warehouse_id attribute)
     db_product = inventory_service.get_product(db=db, product_id=product_id)
     if not db_product:
         raise HTTPException(status_code=404, detail="Product not found")
+    access = db.query(UserWarehouseAccess).filter_by(user_id=current_user.id, warehouse_id=db_product.warehouse_id).first()
+    if not access:
+        raise HTTPException(status_code=403, detail="You do not have access to this warehouse.")
     inventory_service.delete_product(db=db, product_id=product_id)
     return {"detail": "Product deleted successfully"}
 

@@ -16,6 +16,7 @@ class User(Base):
     full_name = Column(String, nullable=True)
     email = Column(String, nullable=True)
     phone = Column(String, nullable=True)
+    fingerprint_template = Column(LargeBinary, nullable=True)  # For storing fingerprint data
 
     # Correct the reverse relationship
     payroll_records = relationship("PayrollRecord", back_populates="user")

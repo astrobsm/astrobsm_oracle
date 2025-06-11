@@ -25,13 +25,11 @@ app = FastAPI(title="AstroBSM-Oracle IVANSTAMAS")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://astrobsm-oracle-backend.onrender.com",
-        "https://astrobsm-oracle.onrender.com",
-        # Add localhost for local dev if needed
-        "http://localhost",
-        "http://localhost:3000",
+        "https://astrobsm-oracle.onrender.com",  # Render frontend
+        "http://localhost:3000",                 # Local React dev
+        "http://localhost:3001",
         "http://127.0.0.1:3000",
-        "http://127.0.0.1:8000",
+        "http://127.0.0.1:3001",
     ],
     allow_credentials=True,
     allow_methods=["*"],

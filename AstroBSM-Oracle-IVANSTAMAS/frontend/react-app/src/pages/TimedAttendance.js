@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import QrScanner from 'react-qr-scanner';
+import React, { useState } from 'react';
+import WebAuthnButton from '../components/WebAuthnButton';
 import './TimedAttendance.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "";
@@ -7,116 +7,73 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "";
 const TimedAttendance = () => {
     const [action, setAction] = useState('time-in');
     const [message, setMessage] = useState('');
-    const [selectedStaff, setSelectedStaff] = useState('');
-    const [isCameraActive, setIsCameraActive] = useState(false);
-    const [qrCodeData, setQrCodeData] = useState('');
-    const [staffList, setStaffList] = useState([]);
+    const [isScanning, setIsScanning] = useState(false);
+    // Replace with your actual user ID from session/auth
+    const userId = 1;
 
-    useEffect(() => {
-        fetch(`${API_BASE_URL}/staff/`)
-            .then((res) => res.json())
-            .then((data) => setStaffList(Array.isArray(data) ? data : []))
-            .catch((err) => {
-                setStaffList([]);
-                console.error('Failed to fetch staff:', err);
-            });
-    }, []);
-
-    const handleScanQRCode = () => {
-        setIsCameraActive(true);
-    };
-
-    const handleQRCodeScan = (data) => {
-        if (data) {
-            setQrCodeData(data);
-            setIsCameraActive(false);
-            // Simulate matching QR code with database
-            if (data === 'expected_qr_code') {
-                setMessage(`QR code matched successfully for ${action}.`);
-            } else {
-                setMessage('QR code does not match any records.');
-            }
-        }
-    };
-
-    const handleQRCodeError = (err) => {
-        console.error(err);
-        setMessage('Error scanning QR code.');
-    };
-
-    const handleFacialScan = () => {
-        // Simulate facial recognition functionality
-        setMessage(`Facial scan completed successfully for ${action}.`);
-    };
-
-    const handleStaffChange = (e) => {
-        setSelectedStaff(e.target.value);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMessage("");
-        if (!selectedStaff) {
-            setMessage("Please select a staff member.");
-            return;
-        }
+    // Desktop fingerprint scan function (DigitalPersona)
+    const handleFingerprintScan = async () => {
+        setIsScanning(true);
+        setMessage('Place your finger on the scanner...');
         try {
-            const res = await fetch(`${API_BASE_URL}/attendance`, {
+            const res = await fetch('http://localhost:5001/scan');
+            if (!res.ok) throw new Error('Scan failed');
+            const fingerprintTemplate = await res.text();
+            const apiRes = await fetch(`${API_BASE_URL}/attendance`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    staff_id: selectedStaff,
+                    fingerprint_template: fingerprintTemplate, // Use consistent key
                     action: action === 'time-in' ? 'IN' : 'OUT'
                 })
             });
-            const data = await res.json();
-            if (res.ok) {
+            const data = await apiRes.json();
+            if (apiRes.ok) {
                 setMessage(`Attendance ${action === 'time-in' ? 'Time-In' : 'Time-Out'} recorded successfully.`);
             } else {
                 setMessage(data.detail || 'Error recording attendance.');
             }
         } catch (err) {
-            setMessage('Network error.');
+            setMessage('Fingerprint scan failed or service not running.');
+        }
+        setIsScanning(false);
+    };
+
+    // Mobile biometric (WebAuthn) handler
+    const handleAttendanceSuccess = async (userId, action) => {
+        setMessage('Submitting attendance...');
+        const res = await fetch(`${API_BASE_URL}/attendance`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: userId,
+                action: action
+            })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            setMessage('Attendance recorded!');
+        } else {
+            setMessage(data.detail || 'Error recording attendance.');
         }
     };
 
     return (
         <div className="timed-attendance-container">
             <h1>Timed Attendance</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Select Staff:
-                    <select value={selectedStaff} onChange={handleStaffChange} required>
-                        <option value="">-- Select Staff --</option>
-                        {staffList.length === 0 && <option disabled>No staff found</option>}
-                        {staffList.map((staff) => (
-                            <option key={staff.id} value={staff.id}>
-                                {staff.name} ({staff.staff_id})
-                            </option>
-                        ))}
-                    </select>
-                </label>
-                <label>
-                    Select Action:
-                    <select value={action} onChange={(e) => setAction(e.target.value)} required>
-                        <option value="time-in">Time-In</option>
-                        <option value="time-out">Time-Out</option>
-                    </select>
-                </label>
-                <button type="submit" className="submit-btn">Submit</button>
-            </form>
-            <div className="attendance-buttons">
-                <button onClick={handleScanQRCode}>Scan QR Code</button>
-                <button onClick={handleFacialScan}>Facial Scan</button>
+            <label>
+                Select Action:
+                <select value={action} onChange={e => setAction(e.target.value)} required>
+                    <option value="time-in">Time-In</option>
+                    <option value="time-out">Time-Out</option>
+                </select>
+            </label>
+            <button className="submit-btn" onClick={handleFingerprintScan} disabled={isScanning}>
+                {isScanning ? 'Scanning...' : 'Scan Fingerprint (Desktop)'}
+            </button>
+            <div style={{ margin: '16px 0' }}>
+                <WebAuthnButton userId={userId} action={action === 'time-in' ? 'IN' : 'OUT'} onSuccess={handleAttendanceSuccess} />
             </div>
-            {isCameraActive && (
-                <QrScanner
-                    delay={300}
-                    onError={handleQRCodeError}
-                    onScan={handleQRCodeScan}
-                    style={{ width: '100%' }}
-                />
-            )}
             {message && <p className="message">{message}</p>}
         </div>
     );

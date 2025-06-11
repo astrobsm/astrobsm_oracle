@@ -23,5 +23,6 @@ class Staff(Base):
     role = Column(String, nullable=True)
     department = Column(String, nullable=True)
     appointment_type = Column(String, nullable=True)
+    fingerprint_template = Column(String, nullable=True)  # Store fingerprint template as string or base64
 
     device_intakes = relationship("DeviceIntake", back_populates="staff")

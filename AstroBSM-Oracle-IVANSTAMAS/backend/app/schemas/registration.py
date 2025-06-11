@@ -15,6 +15,7 @@ class StaffRegistration(BaseModel):
     role: str
     department: str
     appointment_type: str
+    fingerprint_template: Optional[str] = None  # NEW: for fingerprint enrollment
 
 class ProductRegistration(BaseModel):
     name: str
@@ -175,6 +176,7 @@ class UserCreate(BaseModel):
     role: str
     facial_scan_data: Optional[bytes] = None
     qr_code: Optional[str] = None
+    fingerprint_template: Optional[bytes] = None  # NEW FIELD
 
 class User(BaseModel):
     id: int
@@ -182,6 +184,7 @@ class User(BaseModel):
     role: str
     facial_scan_data: Optional[bytes] = None
     qr_code: Optional[str] = None
+    fingerprint_template: Optional[bytes] = None  # NEW FIELD
 
     class Config:
         from_attributes = True

@@ -3,6 +3,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { useNavigate } from 'react-router-dom';
 import './Registration.css';
 import { saveFormData } from '../db/indexedDB';
+import WebAuthnButton from '../components/WebAuthnButton';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -80,6 +81,7 @@ const Registration = () => {
                         role: fields.role || 'staff',
                         department: fields.department,
                         appointment_type: fields.appointmentType,
+                        fingerprint_template: fields.fingerprintTemplate, // Add fingerprint template to payload
                     };
                     break;
                 case 'product':
@@ -365,6 +367,43 @@ const Registration = () => {
                                 value={formData.additionalFields?.appointmentType || ''}
                                 onChange={handleAdditionalFieldsChange}
                                 required
+                            />
+                        </label>
+                        {/* Fingerprint Enrollment Section */}
+                        <label>
+                            Fingerprint Enrollment:
+                            <button
+                                type="button"
+                                disabled={loading}
+                                onClick={async () => {
+                                    setMessage('Place your finger on the scanner...');
+                                    try {
+                                        const res = await fetch('http://localhost:5001/enroll');
+                                        if (!res.ok) throw new Error('Enrollment failed');
+                                        const fingerprintTemplate = await res.text();
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            additionalFields: {
+                                                ...prev.additionalFields,
+                                                fingerprintTemplate: fingerprintTemplate
+                                            }
+                                        }));
+                                        setMessage('Fingerprint enrolled successfully!');
+                                    } catch (err) {
+                                        setMessage('Fingerprint enrollment failed or service not running.');
+                                    }
+                                }}
+                            >
+                                Enroll Fingerprint (Desktop)
+                            </button>
+                        </label>
+                        <label>
+                            Or enroll with WebAuthn (Mobile):
+                            <WebAuthnButton
+                                userId={formData.additionalFields.staffId || ''}
+                                action="ENROLL"
+                                onSuccess={(_, __) => setMessage('WebAuthn enrollment successful!')}
+                                onError={() => setMessage('WebAuthn enrollment failed.')}
                             />
                         </label>
                     </div>

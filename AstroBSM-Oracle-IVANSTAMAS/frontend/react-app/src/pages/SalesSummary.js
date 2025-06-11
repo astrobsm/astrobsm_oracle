@@ -66,7 +66,7 @@ const SalesSummary = () => {
       <Typography variant="h4" gutterBottom>Sales Summary</Typography>
       <form className="summary-form" onSubmit={e => { e.preventDefault(); fetchSummary(); }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} md={5}>
             <TextField
               label="Start Date"
               type="date"
@@ -77,7 +77,7 @@ const SalesSummary = () => {
               required
             />
           </Grid>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} md={5}>
             <TextField
               label="End Date"
               type="date"
@@ -88,7 +88,7 @@ const SalesSummary = () => {
               required
             />
           </Grid>
-          <Grid item xs={12} sm={2}>
+          <Grid item xs={12} md={2}>
             <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
               {loading ? 'Loading...' : 'Get Summary'}
             </Button>

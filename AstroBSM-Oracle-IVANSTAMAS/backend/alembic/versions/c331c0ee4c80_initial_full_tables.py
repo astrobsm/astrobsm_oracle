@@ -160,6 +160,7 @@ def upgrade():
     sa.Column('full_name', sa.String(), nullable=True),
     sa.Column('email', sa.String(), nullable=True),
     sa.Column('phone', sa.String(), nullable=True),
+    sa.Column('fingerprint_template', sa.LargeBinary(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)

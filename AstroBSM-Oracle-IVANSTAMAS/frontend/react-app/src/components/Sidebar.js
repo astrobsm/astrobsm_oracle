@@ -84,6 +84,9 @@ const Sidebar = () => {
                     <li><Link to="/payroll" tabIndex={sidebarOpen ? 0 : -1} onClick={handleSidebarToggle}>Payroll</Link></li>
                     <li><Link to="/reports-analysis" tabIndex={sidebarOpen ? 0 : -1} onClick={handleSidebarToggle}>Reports & Analysis</Link></li>
                     <li><Link to="/settings" tabIndex={sidebarOpen ? 0 : -1} onClick={handleSidebarToggle}>Settings</Link></li>
+                    <li><Link to="/admin-dashboard" tabIndex={sidebarOpen ? 0 : -1} onClick={handleSidebarToggle}>Admin Dashboard</Link></li>
+                    <li><Link to="/admin/users" tabIndex={sidebarOpen ? 0 : -1} onClick={handleSidebarToggle}>Manage Users</Link></li>
+                    <li><Link to="/admin/user-approvals" tabIndex={sidebarOpen ? 0 : -1} onClick={handleSidebarToggle}>User Approvals</Link></li>
                 </ul>
             </nav>
         </>

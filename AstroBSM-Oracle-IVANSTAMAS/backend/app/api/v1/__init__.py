@@ -16,6 +16,7 @@ from .endpoints.hours_worked import router as hours_worked_router
 from .endpoints.attendance import router as attendance_router
 from .endpoints.appraisal import router as appraisal_router
 from .endpoints.device_fault_report import router as device_fault_report_router
+from app.api.v1.endpoints.warehouse_transfer import router as warehouse_transfer_router
 # Add other endpoint imports as needed
 
 api_router.include_router(payroll_router, tags=["payroll"])
@@ -45,4 +46,5 @@ api_router.include_router(hours_worked_router, tags=["Hours Worked"])
 api_router.include_router(attendance_router, prefix="/attendance", tags=["Attendance"])
 api_router.include_router(appraisal_router, prefix="/appraisal", tags=["Appraisal"])
 api_router.include_router(device_fault_report_router, prefix="/device-fault-reporting", tags=["Device Fault Reporting"])
+api_router.include_router(warehouse_transfer_router, prefix="/warehouse-transfer", tags=["Warehouse Transfer"])
 # Include other routers as needed

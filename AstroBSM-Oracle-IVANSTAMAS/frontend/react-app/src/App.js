@@ -55,6 +55,7 @@ import AdminReports from './pages/AdminReports';
 import AdminSettings from './pages/AdminSettings';
 import AdminUserApprovals from './pages/AdminUserApprovals';
 import DeviceFaultReport from './pages/DeviceFaultReport';
+import CreateInvoice from './pages/CreateInvoice';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -140,6 +141,7 @@ const App = () => {
                     <Route path="/admin/user-approvals" element={<AdminUserApprovals />} />
                     <Route path="/admin-dashboard" element={<AdminDashboard />} />
                     <Route path="/device-fault-report" element={<DeviceFaultReport />} />
+                    <Route path="/create-invoice" element={<CreateInvoice />} />
                     <Route path="*" element={<div>Route not found: {window.location.pathname}</div>} />
                 </Routes>
             </div>

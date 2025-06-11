@@ -40,7 +40,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/users/`);
+        const response = await fetch(`${API_BASE_URL}/auth/list-users`); // Correct endpoint
         const data = await response.json();
         setUsers(Array.isArray(data) ? data.map(u => ({ ...u, onApprove })) : []);
       } catch (error) {
@@ -53,13 +53,22 @@ const AdminDashboard = () => {
 
   const onApprove = async (user) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/users/${user.id}/approve`, {
+      const response = await fetch(`${API_BASE_URL}/auth/approve-user/${user.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
       if (!response.ok) throw new Error('Failed to approve user');
-      // Optionally, generate credentials here or backend can return them
-      alert('User approved and credentials generated!');
+      // Get PDF blob and trigger download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `credentials_user_${user.id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      alert('User approved and credentials PDF downloaded!');
       setUsers(prev => prev.map(u => u.id === user.id ? { ...u, status: 'approved' } : u));
     } catch (error) {
       alert('Error approving user.');
