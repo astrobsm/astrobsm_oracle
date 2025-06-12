@@ -10,3 +10,4 @@ httpx
 pydantic
 email-validator
 pydantic-settings
+reportlab

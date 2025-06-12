@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DigitalPersonaFingerprintService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4bb17ed879863ad9b2288ed1428f949b9f89db1a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5e5a04881271de9063461d058467265c4f5add54")]
 [assembly: System.Reflection.AssemblyProductAttribute("DigitalPersonaFingerprintService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DigitalPersonaFingerprintService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
